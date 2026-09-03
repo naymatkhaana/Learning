@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vectors, Dot Products & Matrix Multiplication</title>
+
+<style>
+    :root {
+        --bg: #07111f;
+        --panel: rgba(15, 28, 48, 0.88);
+        --panel2: rgba(20, 38, 64, 0.75);
+        --border: rgba(255,255,255,.10);
+        --text: #eaf2ff;
+        --muted: #91a4bd;
+        --cyan: #38d9ff;
+        --blue: #5b8cff;
+        --green: #35e0a1;
+        --red: #ff5b70;
+        --purple: #b875ff;
+        --yellow: #ffd166;
+        --shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                     "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+            radial-gradient(circle at 10% 10%, rgba(56,217,255,.13), transparent 30%),
+            radial-gradient(circle at 90% 20%, rgba(184,117,255,.12), transparent 30%),
+            radial-gradient(circle at 50% 90%, rgba(53,224,161,.08), transparent 35%),
+            var(--bg);
+        min-height: 100vh;
+    }
+
+    .container {
+        width: min(1250px, 94%);
+        margin: auto;
+    }
+
+    header {
+        padding: 70px 0 45px;
+        text-align: center;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 8px 14px;
+        border: 1px solid rgba(56,217,255,.25);
+        background: rgba(56,217,255,.08);
+        color: var(--cyan);
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        margin: 18px 0 10px;
+        font-size: clamp(38px, 6vw, 72px);
+        line-height: 1;
+        letter-spacing: -0.055em;
+        background: linear-gradient(100deg, #fff, #9beaff 45%, #b875ff);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .subtitle {
+        max-width: 760px;
+        margin: auto;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    section {
+        margin: 35px 0 70px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .number {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        color: #03101c;
+        font-weight: 900;
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 30px;
+        letter-spacing: -.025em;
+    }
+
+    h3 {
+        margin-top: 0;
+    }
+
+    .card {
+        background: linear-gradient(145deg, rgba(18,35,59,.92), rgba(8,19,34,.9));
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+        backdrop-filter: blur(18px);
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+    }
+
+    @media(max-width: 850px) {
+        .grid-2, .grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .vector-editor {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin: 20px 0;
+    }
+
+    .vector-box {
+        text-align: center;
+    }
+
+    .vector-label {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .column-vector {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        position: relative;
+        padding: 8px 18px;
+    }
+
+    .column-vector::before,
+    .column-vector::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        border-top: 2px solid #64748b;
+        border-bottom: 2px solid #64748b;
+    }
+
+    .column-vector::before {
+        left: 0;
+        border-left: 2px solid #64748b;
+    }
+
+    .column-vector::after {
+        right: 0;
+        border-right: 2px solid #64748b;
+    }
+
+    input {
+        width: 70px;
+        padding: 9px 8px;
+        border-radius: 9px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: #071525;
+        color: white;
+        font-size: 17px;
+        text-align: center;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: var(--cyan);
+        box-shadow: 0 0 0 3px rgba(56,217,255,.1);
+    }
+
+    .vector-a input { border-color: rgba(56,217,255,.4); }
+    .vector-b input { border-color: rgba(184,117,255,.4); }
+
+    canvas {
+        width: 100%;
+        max-width: 650px;
+        height: 380px;
+        display: block;
+        margin: auto;
+        border-radius: 18px;
+        background:
+            linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+            #071525;
+        background-size: 32px 32px;
+        border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .formula {
+        font-family: "Cambria Math", "Times New Roman", serif;
+        font-size: 27px;
+        text-align: center;
+        padding: 18px;
+        margin: 12px 0;
+        border-radius: 15px;
+        background: rgba(255,255,255,.035);
+    }
+
+    .result {
+        text-align: center;
+        padding: 18px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(53,224,161,.10), rgba(56,217,255,.06));
+        border: 1px solid rgba(53,224,161,.2);
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .explain {
+        color: var(--muted);
+        line-height: 1.7;
+    }
+
+    .shape {
+        display: inline-block;
+        padding: 5px 10px;
+        background: rgba(255,255,255,.07);
+        border-radius: 8px;
+        color: var(--yellow);
+        font-family: monospace;
+        font-weight: 700;
+    }
+
+    .matrix-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 22px;
+        flex-wrap: wrap;
+        margin: 28px 0;
+    }
+
+    .matrix {
+        display: inline-grid;
+        gap: 7px;
+        position: relative;
+        padding: 10px 15px;
+    }
+
+    .matrix::before,
+    .matrix::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 9px;
+        border-top: 2px solid #64748b;
+        border-bottom: 2px solid #64748b;
+    }
+
+    .matrix::before {
+        left: 0;
+        border-left: 2px solid #64748b;
+    }
+
+    .matrix::after {
+        right: 0;
+        border-right: 2px solid #64748b;
+    }
+
+    .matrix-cell {
+        width: 62px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: rgba(255,255,255,.045);
+        transition: .25s;
+        font-weight: 700;
+    }
+
+    .matrix-4x2 {
+        grid-template-columns: repeat(2, 62px);
+        grid-template-rows: repeat(4, 48px);
+    }
+
+    .matrix-2x3 {
+        grid-template-columns: repeat(3, 62px);
+        grid-template-rows: repeat(2, 48px);
+    }
+
+    .matrix-result {
+        grid-template-columns: repeat(3, 62px);
+        grid-template-rows: repeat(4, 48px);
+    }
+
+    .operator {
+        font-size: 30px;
+        color: var(--muted);
+    }
+
+    .highlight-red {
+        background: rgba(255,91,112,.30) !important;
+        color: #ff9aa8;
+        box-shadow: inset 0 0 0 2px rgba(255,91,112,.7);
+    }
+
+    .highlight-green {
+        background: rgba(53,224,161,.28) !important;
+        color: #8ff5d0;
+        box-shadow: inset 0 0 0 2px rgba(53,224,161,.7);
+    }
+
+    .highlight-purple {
+        background: rgba(184,117,255,.28) !important;
+        color: #d6b2ff;
+        box-shadow: inset 0 0 0 2px rgba(184,117,255,.7);
+    }
+
+    .highlight-yellow {
+        background: rgba(255,209,102,.25) !important;
+        color: #ffe4a0;
+    }
+
+    button {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #06111e;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--cyan), var(--blue));
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(56,217,255,.18);
+    }
+
+    button.secondary {
+        color: white;
+        background: rgba(255,255,255,.08);
+        border: 1px solid var(--border);
+    }
+
+    .controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .step-text {
+        text-align: center;
+        color: var(--muted);
+        min-height: 30px;
+        margin-top: 15px;
+    }
+
+    .shape-rule {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin: 25px 0;
+        font-size: 21px;
+    }
+
+    .shape-box {
+        padding: 15px 20px;
+        border-radius: 15px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid var(--border);
+        text-align: center;
+    }
+
+    .projection-card {
+        text-align: center;
+    }
+
+    .answer {
+        font-size: 25px;
+        font-weight: 900;
+        color: var(--green);
+        margin-top: 15px;
+    }
+
+    .regression-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .equation-box {
+        padding: 20px 25px;
+        border-radius: 17px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid var(--border);
+        font-family: "Cambria Math", serif;
+        font-size: 26px;
+    }
+
+    .arrow {
+        font-size: 28px;
+        color: var(--cyan);
+    }
+
+    .highlight-text {
+        color: var(--cyan);
+    }
+
+    .footer {
+        text-align: center;
+        padding: 35px;
+        color: #61758e;
+        border-top: 1px solid var(--border);
+    }
+
+    .small {
+        font-size: 14px;
+        color: var(--muted);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <span class="badge">Linear Algebra • Interactive Lesson</span>
+    <h1>Vectors → Matrices → Regression</h1>
+    <p class="subtitle">
+        Explore cosine similarity, dot products, matrix multiplication,
+        projection shapes, and how all of these ideas link to
+        linear regression.
+    </p>
+</header>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 1: VECTORS -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">1</div>
+    <h2>Two Vectors</h2>
+</div>
+
+<div class="card">
+
+    <p class="explain">
+        A vector can be represented as a <b>column of numbers</b>.
+        Change the values below and watch the vectors move on the coordinate plot.
+    </p>
+
+    <div class="vector-editor">
+
+        <div class="vector-box">
+            <div class="vector-label" style="color:var(--cyan)">a</div>
+
+            <div class="column-vector vector-a">
+                <input id="a1" type="number" value="3">
+                <input id="a2" type="number" value="2">
+                <input id="a3" type="number" value="1">
+            </div>
+
+            <p class="small">shape: <span class="shape">3 × 1</span></p>
+        </div>
+
+        <div class="vector-box">
+            <div class="vector-label" style="color:var(--purple)">b</div>
+
+            <div class="column-vector vector-b">
+                <input id="b1" type="number" value="1">
+                <input id="b2" type="number" value="3">
+                <input id="b3" type="number" value="2">
+            </div>
+
+            <p class="small">shape: <span class="shape">3 × 1</span></p>
+        </div>
+
+    </div>
+
+    <canvas id="vectorCanvas" width="650" height="380"></canvas>
+
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 2: COSINE -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">2</div>
+    <h2>Cosine Similarity</h2>
+</div>
+
+<div class="grid-2">
+
+    <div class="card">
+
+        <h3>Cosine of the angle</h3>
+
+        <div class="formula">
+            cos θ =
+            <span style="color:var(--cyan)">a · b</span>
+            /
+            (‖a‖ ‖b‖)
+        </div>
+
+        <p class="explain">
+            The dot product tells us how strongly the two vectors point
+            in the same direction. Cosine similarity focuses only on
+            their direction, not their size.
+        </p>
+
+        <div class="result">
+            cos θ = <span id="cosResult">0</span>
+        </div>
+
+        <div class="result" style="margin-top:12px;background:rgba(184,117,255,.08)">
+            θ = <span id="angleResult">0</span>°
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Dot product: multiply and sum</h3>
+
+        <div class="formula" id="expandedDot">
+            a₁b₁ + a₂b₂ + a₃b₃
+        </div>
+
+        <div class="formula" id="numericDot">
+            3×1 + 2×3 + 1×2
+        </div>
+
+        <div class="result">
+            a · b = <span id="dotResult">11</span>
+        </div>
+
+        <p class="explain">
+            Each corresponding pair is multiplied, and then all those
+            products are added together.
+        </p>
+
+    </div>
+
+</div>
+
+<div>
+  <p class="explain">
+	We usually assume a and b are <b>unit vectors</b> and therefore:  
+  </p>
+    <div class="formula">
+             cos θ = <span style="color:var(--cyan)">a · b</span>
+    </div>
+    <div class="formula">
+	     cosine similarity = dot product    
+    </div>
+  <p class="explain">
+	Higher similarity ➔ Higher dot product
+	 <br> 
+	Lower similarity ➔ Lower dot product 
+	 <br>
+	cos θ = 0 degree ➔ cos(θ) = 1  
+	 <br>
+	cos θ = 90 degree ➔ cos(θ) = 0 
+	 <br>
+	cos θ = 180 degree ➔ cos(θ) = -1
+  </p>
+</div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 3: TRANSPOSE -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">3</div>
+    <h2>Why Transpose?</h2>
+	Shape in <span class="shape">orange</span> 
+</div>
+
+<div class="card">
+
+    <p class="explain">
+        Both <b>a</b> and <b>b</b> are column vectors:
+    </p>
+
+    <div class="matrix-wrapper">
+
+        <div>
+            <div class="matrix matrix-4x2"
+                 style="grid-template-columns:62px;grid-template-rows:repeat(3,48px)">
+                <div class="matrix-cell">a₁</div>
+                <div class="matrix-cell">a₂</div>
+                <div class="matrix-cell">a₃</div>
+            </div>
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">3 × 1</span>
+            </div>
+        </div>
+
+        <div class="operator">·</div>
+
+        <div>
+            <div class="matrix matrix-4x2"
+                 style="grid-template-columns:62px;grid-template-rows:repeat(3,48px)">
+                <div class="matrix-cell">b₁</div>
+                <div class="matrix-cell">b₂</div>
+                <div class="matrix-cell">b₃</div>
+            </div>
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">3 × 1</span>
+            </div>
+        </div>
+
+        <div class="operator">✕</div>
+
+        <div class="shape-box">
+            <b>Not matrix multiplication compatible</b>
+            <br>
+            <span class="small">(3×1)(3×1)</span>
+        </div>
+
+    </div>
+
+
+    <div class="formula">
+        a<sup>T</sup> · b
+    </div>
+
+    <div class="matrix-wrapper">
+
+        <div>
+            <div class="matrix"
+                 style="grid-template-columns:repeat(3,62px)">
+                <div class="matrix-cell">a₁</div>
+                <div class="matrix-cell">a₂</div>
+                <div class="matrix-cell">a₃</div>
+            </div>
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">1 × 3</span>
+            </div>
+        </div>
+
+        <div class="operator">·</div>
+
+        <div>
+            <div class="matrix"
+                 style="grid-template-columns:62px;grid-template-rows:repeat(3,48px)">
+                <div class="matrix-cell">b₁</div>
+                <div class="matrix-cell">b₂</div>
+                <div class="matrix-cell">b₃</div>
+            </div>
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">3 × 1</span>
+            </div>
+        </div>
+
+        <div class="operator">=</div>
+
+        <div class="shape-box">
+            <b>Scalar</b>
+            <br>
+            <span class="shape">1 × 1</span>
+        </div>
+
+    </div>
+
+    <div class="formula">
+        a<sup>T</sup>b
+        =
+        a₁b₁ + a₂b₂ + a₃b₃
+    </div>
+
+    <div class="result">
+        <span id="transposeResult">11</span>
+    </div>
+
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 4: MATRIX MULTIPLICATION RULE -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">4</div>
+    <h2>Matrix Multiplication</h2>
+</div>
+
+<div class="card">
+
+    <h3>The shape rule</h3>
+
+    <div class="shape-rule">
+
+        <div class="shape-box">
+            Matrix A
+            <br>
+            <span class="shape">m × n</span>
+        </div>
+
+        <div>×</div>
+
+        <div class="shape-box">
+            Matrix B
+            <br>
+            <span class="shape">n × p</span>
+        </div>
+
+        <div>=</div>
+
+        <div class="shape-box">
+            Result
+            <br>
+            <span class="shape">m × p</span>
+        </div>
+
+    </div>
+
+    <p class="explain" style="text-align:center">
+        The <b>inside dimensions must match</b>.
+        The outside dimensions become the shape of the answer.
+    </p>
+
+    <div class="formula">
+        (AB)<sub>ij</sub> = Σ a<sub>ik</sub>b<sub>kj</sub>
+    </div>
+
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 5: STEP MATRIX -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">5</div>
+    <h2>Matrix Multiplication — Step by Step</h2>
+</div>
+
+<div class="card">
+
+    <div class="shape-rule">
+
+        <div class="shape-box">
+            <b>A</b>
+            <br>
+            <span class="shape">4 × 2</span>
+        </div>
+
+        <div>×</div>
+
+        <div class="shape-box">
+            <b>B</b>
+            <br>
+            <span class="shape">2 × 3</span>
+        </div>
+
+        <div>=</div>
+
+        <div class="shape-box">
+            <b>AB</b>
+            <br>
+            <span class="shape">4 × 3</span>
+        </div>
+
+    </div>
+
+
+    <div class="matrix-wrapper">
+
+        <!-- MATRIX A -->
+        <div>
+            <div style="text-align:center;margin-bottom:10px;font-weight:800">
+                A
+            </div>
+
+            <div id="matrixA" class="matrix matrix-4x2">
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">2</div>
+                <div class="matrix-cell">3</div>
+                <div class="matrix-cell">4</div>
+                <div class="matrix-cell">5</div>
+                <div class="matrix-cell">6</div>
+                <div class="matrix-cell">7</div>
+                <div class="matrix-cell">8</div>
+            </div>
+
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">4 × 2</span>
+            </div>
+        </div>
+
+
+        <div class="operator">×</div>
+
+
+        <!-- MATRIX B -->
+        <div>
+            <div style="text-align:center;margin-bottom:10px;font-weight:800">
+                B
+            </div>
+
+            <div id="matrixB" class="matrix matrix-2x3">
+                <div class="matrix-cell">2</div>
+                <div class="matrix-cell">1</div>
+                <div class="matrix-cell">3</div>
+                <div class="matrix-cell">4</div>
+                <div class="matrix-cell">2</div>
+                <div class="matrix-cell">5</div>
+            </div>
+
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">2 × 3</span>
+            </div>
+        </div>
+
+
+        <div class="operator">=</div>
+
+
+        <!-- RESULT -->
+        <div>
+            <div style="text-align:center;margin-bottom:10px;font-weight:800">
+                AB
+            </div>
+
+            <div id="matrixResult" class="matrix matrix-result">
+
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+                <div class="matrix-cell">?</div>
+
+            </div>
+
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">4 × 3</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+        <button onclick="nextMatrixStep()">Next step →</button>
+        <button class="secondary" onclick="resetMatrix()">Reset</button>
+    </div>
+
+    <div id="matrixStepText" class="step-text">
+        Click "Next step" to begin.
+    </div>
+
+
+    <!-- <div id="calculation" class="formula">
+        Choose a row and column to see their dot product.
+    </div> !-->
+
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 6: PROJECTION -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">6</div>
+    <h2>What Shape Projects a Vector?</h2>
+</div>
+
+<div class="card">
+
+    <p class="explain">
+        Suppose we have a vector with shape <span class="shape">2 × 1</span>.
+        What matrix is required to transform it into a
+        <span class="shape">3 × 1</span> vector?
+    </p>
+
+    <div class="grid-3">
+
+        <div class="card projection-card">
+            <h3>2 × 2</h3>
+            <p>Can it produce 3 × 1?</p>
+            <button onclick="projectionAnswer(2)">Check</button>
+            <div id="answer2" class="answer"></div>
+        </div>
+
+        <div class="card projection-card">
+            <h3>3 × 2</h3>
+            <p>Can it produce 3 × 1?</p>
+            <button onclick="projectionAnswer(3)">Check</button>
+            <div id="answer3" class="answer"></div>
+        </div>
+
+        <div class="card projection-card">
+            <h3>2 × 3</h3>
+            <p>Can it produce 3 × 1?</p>
+            <button onclick="projectionAnswer(4)">Check</button>
+            <div id="answer4" class="answer"></div>
+        </div>
+
+    </div>
+
+    <div class="formula">
+        (3 × 2)(2 × 1) = 3 × 1
+    </div>
+
+    <p class="explain" style="text-align:center">
+        Therefore, to map <b>2-dimensional → 3-dimensional</b>,
+        we need a matrix of shape <span class="shape">3 × 2</span>.
+    </p>
+
+
+    <hr style="border-color:var(--border);margin:35px 0">
+
+
+    <p class="explain">
+        Now suppose we want to map a
+        <span class="shape">2 × 1</span> vector into a
+        <span class="shape">5 × 1</span> vector.
+    </p>
+
+    <div class="formula">
+        (5 × 2)(2 × 1) = 5 × 1
+    </div>
+
+    <div class="result">
+        Required projection matrix:
+        <br>
+        <span style="font-size:34px;color:var(--cyan)">5 × 2</span>
+    </div>
+
+</div>
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SECTION 7: LINEAR REGRESSION -->
+<!-- ========================================================= -->
+
+<section>
+
+<div class="section-title">
+    <div class="number">7</div>
+    <h2>From Linear Regression to Vectors</h2>
+</div>
+
+<div class="card">
+
+    <p class="explain">
+        We normally begin with the equation of a straight line:
+    </p>
+
+    <div class="regression-flow">
+
+        <div class="equation-box">
+            y = mx + c
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="equation-box">
+            y = w₁x + w₀
+        </div>
+
+    </div>
+
+
+    <div class="formula">
+        y = w₁x + w₀ (1)
+    </div>
+
+
+    <p class="explain">
+        We can make this look like a dot product by putting the weights
+        and input values into vectors.
+    </p>
+
+
+    <div class="matrix-wrapper">
+
+        <div>
+            <div style="text-align:center;margin-bottom:10px">
+                <b>w<sup>T</sup></b>
+            </div>
+
+            <div class="matrix"
+                 style="grid-template-columns:repeat(2,75px)">
+                <div class="matrix-cell">w₁</div>
+                <div class="matrix-cell">w₀</div>
+            </div>
+
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">1 × 2</span>
+            </div>
+        </div>
+
+
+        <div class="operator">·</div>
+
+
+        <div>
+            <div style="text-align:center;margin-bottom:10px">
+                <b>x</b>
+            </div>
+
+            <div class="matrix"
+                 style="grid-template-columns:75px;grid-template-rows:repeat(2,48px)">
+                <div class="matrix-cell">x</div>
+                <div class="matrix-cell">1</div>
+            </div>
+
+            <div style="text-align:center;margin-top:10px">
+                <span class="shape">2 × 1</span>
+            </div>
+        </div>
+
+
+        <div class="operator">=</div>
+
+        <div class="shape-box">
+            <b>y</b>
+            <br>
+            <span class="shape">1 × 1</span>
+        </div>
+
+    </div>
+
+
+    <div class="formula">
+        y
+        =
+        [ w₁ &nbsp; w₀ ]
+        <span style="color:var(--cyan)">[ x &nbsp; 1 ]<sup>T</sup></span>
+    </div>
+
+
+    <div class="formula" style="color:var(--green)">
+        y = w<sup>T</sup>x
+    </div>
+
+
+    <div class="result">
+        The same idea:
+        <br>
+        <span style="color:var(--cyan)">
+            multiply corresponding values → add them
+        </span>
+    </div>
+
+</div>
+</section>
+
+
+</div>
+
+
+<footer class="footer">
+    Interactive Linear Algebra Lesson
+    <br>
+    <span class="small">Vectors • Dot Products • Matrices • Regression</span>
+</footer>
+
+
+<script>
+
+/* ============================================================
+   VECTOR SECTION
+============================================================ */
+
+const inputs = [
+    "a1","a2","a3",
+    "b1","b2","b3"
+];
+
+inputs.forEach(id => {
+    document.getElementById(id).addEventListener("input", updateVectors);
+});
+
+function getVector(prefix) {
+    return [
+        Number(document.getElementById(prefix+"1").value) || 0,
+        Number(document.getElementById(prefix+"2").value) || 0,
+        Number(document.getElementById(prefix+"3").value) || 0
+    ];
+}
+
+function dot(a,b) {
+    return a.reduce((sum,v,i) => sum + v*b[i], 0);
+}
+
+function magnitude(v) {
+    return Math.sqrt(v.reduce((sum,x) => sum + x*x, 0));
+}
+
+function updateVectors() {
+
+    const a = getVector("a");
+    const b = getVector("b");
+
+    const d = dot(a,b);
+    const ma = magnitude(a);
+    const mb = magnitude(b);
+
+    let cosine = 0;
+
+    if(ma !== 0 && mb !== 0) {
+        cosine = d / (ma * mb);
+    }
+
+    cosine = Math.max(-1, Math.min(1, cosine));
+
+    const angle = Math.acos(cosine) * 180 / Math.PI;
+
+    document.getElementById("dotResult").textContent = d.toFixed(4);
+    document.getElementById("transposeResult").textContent = d.toFixed(4);
+    document.getElementById("cosResult").textContent = cosine.toFixed(4);
+    document.getElementById("angleResult").textContent = angle.toFixed(2);
+
+    document.getElementById("numericDot").textContent =
+        `${a[0]}×${b[0]} + ${a[1]}×${b[1]} + ${a[2]}×${b[2]}`;
+
+    drawVectors(a,b);
+}
+
+
+/* ============================================================
+   VECTOR CANVAS
+============================================================ */
+
+function drawVectors(a,b) {
+
+    const canvas = document.getElementById("vectorCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ctx.clearRect(0,0,W,H);
+
+    const cx = W/2;
+    const cy = H/2;
+
+    const scale = 55;
+
+    // axes
+    ctx.strokeStyle = "rgba(255,255,255,.18)";
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    ctx.moveTo(0,cy);
+    ctx.lineTo(W,cy);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx,0);
+    ctx.lineTo(cx,H);
+    ctx.stroke();
+
+    // labels
+    ctx.fillStyle = "#71849d";
+    ctx.font = "13px system-ui";
+
+    ctx.fillText("+x", W-28, cy-8);
+    ctx.fillText("+y", cx+8, 18);
+
+    // vector drawing uses first two components
+    drawArrow(
+        ctx,
+        cx,
+        cy,
+        cx + a[0]*scale,
+        cy - a[1]*scale,
+        "#38d9ff",
+        "a"
+    );
+
+    drawArrow(
+        ctx,
+        cx,
+        cy,
+        cx + b[0]*scale,
+        cy - b[1]*scale,
+        "#b875ff",
+        "b"
+    );
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color,label) {
+
+    const angle = Math.atan2(y2-y1,x2-x1);
+    const head = 12;
+
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 5;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(
+        x2-head*Math.cos(angle-Math.PI/6),
+        y2-head*Math.sin(angle-Math.PI/6)
+    );
+    ctx.lineTo(
+        x2-head*Math.cos(angle+Math.PI/6),
+        y2-head*Math.sin(angle+Math.PI/6)
+    );
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.font = "bold 18px system-ui";
+    ctx.fillText(label,x2+10,y2-10);
+}
+
+
+/* ============================================================
+   MATRIX MULTIPLICATION
+============================================================ */
+
+const A = [
+    [1,2],
+    [3,4],
+    [5,6],
+    [7,8]
+];
+
+const B = [
+    [2,1,3],
+    [4,2,5]
+];
+
+let matrixStep = -1;
+
+function clearHighlights() {
+
+    document.querySelectorAll(".matrix-cell").forEach(cell => {
+        cell.classList.remove(
+            "highlight-red",
+            "highlight-green",
+            "highlight-purple",
+            "highlight-yellow"
+        );
+    });
+}
+
+function nextMatrixStep() {
+
+    matrixStep++;
+
+    if(matrixStep >= 12) {
+        matrixStep = 0;
+    }
+
+    clearHighlights();
+
+    const row = Math.floor(matrixStep / 3);
+    const col = matrixStep % 3;
+
+    const colors = [
+        "highlight-red",
+        "highlight-green",
+        "highlight-purple"
+    ];
+
+    const color = colors[col];
+
+    const cellsA = document
+        .getElementById("matrixA")
+        .querySelectorAll(".matrix-cell");
+
+    const cellsB = document
+        .getElementById("matrixB")
+        .querySelectorAll(".matrix-cell");
+
+    const cellsR = document
+        .getElementById("matrixResult")
+        .querySelectorAll(".matrix-cell");
+
+
+    // Highlight selected row of A
+    for(let c=0;c<2;c++) {
+        cellsA[row*2+c].classList.add(color);
+    }
+
+    // Highlight selected column of B
+    for(let r=0;r<2;r++) {
+        cellsB[r*3+col].classList.add(color);
+    }
+
+
+    // Calculate result
+    const value =
+        A[row][0] * B[0][col] +
+        A[row][1] * B[1][col];
+
+    const resultIndex = row*3 + col;
+
+    cellsR[resultIndex].textContent = value;
+    cellsR[resultIndex].classList.add(color);
+
+
+    document.getElementById("matrixStepText").innerHTML =
+        `<b>Step ${matrixStep+1}:</b>
+         Row ${row+1} of A × Column ${col+1} of B`;
+
+
+    document.getElementById("calculation").innerHTML =
+        `(${A[row][0]} × ${B[0][col]})
+        +
+        (${A[row][1]} × ${B[1][col]})
+        =
+        <b>${value}</b>`;
+}
+
+function resetMatrix() {
+
+    matrixStep = -1;
+
+    clearHighlights();
+
+    const cellsR = document
+        .getElementById("matrixResult")
+        .querySelectorAll(".matrix-cell");
+
+    cellsR.forEach(cell => cell.textContent = "?");
+
+    document.getElementById("matrixStepText").textContent =
+        'Click "Next multiplication" to begin.';
+
+    document.getElementById("calculation").textContent =
+        "Choose a row and column to see their dot product.";
+}
+
+
+/* ============================================================
+   PROJECTION QUESTION
+============================================================ */
+
+function projectionAnswer(option) {
+
+    const messages = {
+        2: "❌ No — (2×2)(2×1) = 2×1",
+        3: "✓ Correct! (3×2)(2×1) = 3×1",
+        4: "❌ No — (2×3)(2×1) is not compatible"
+    };
+
+    document.getElementById("answer"+option).textContent =
+        messages[option];
+}
+
+
+/* ============================================================
+   INITIAL DRAW
+============================================================ */
+
+updateVectors();
+
+</script>
+
+</body>
+</html>
