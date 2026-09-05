@@ -1,0 +1,28 @@
+want to teach cosine similarity and dot product of vectors and dot product matrices. 
+Design the html webpage and  javascript. It should be very stylish and modern.
+ it should show two column vector a and b. it should be interactive and changable and viewable on plot.
+ Then there should be cos theta formula for dot product. and its result as we update the input
+ then there should be multiply and sum formula for dot product. e.g. a_1b_1+a_2b_2+a_3b_3
+ Then it should show the matrix multiplication of two vectors. it may not be possible because of shape
+ therefore take transpose. write a^T.b = both row and column vector with shape then the a_1b_1+a_2b_2+a_3b_3
+ Then begin the matrix multiplication. start with condition shape to multiply two matrices. 
+ show two matrices A of shape 4x2 and B of shape 2x3. 
+ show multiplication: click button. 
+ first row of A, first col of B becomes red. and corresponding result becomes red.
+ click next button 
+ first row of A, second col of B becomes green. and corresponding result becomes green.
+ click next button 
+ first row of A, third col of B becomes purple. and corresponding result becomes purple.
+ so on.
+ after that ask the shape of a matrix to project 2x1 vector to 3x1 and 5x1.
+ every matrix and vector should have a shape.
+ 
+ After that write linear regression equation
+ y = mx + c 
+ then
+ y =w_1 x + w_0
+ 
+ y = w_1 x + w_0 (1)
+ then vector form
+ y = [w_1  w_2] [x  1]
+ y = w^T . x
