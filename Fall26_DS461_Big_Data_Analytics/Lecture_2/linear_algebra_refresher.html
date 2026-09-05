@@ -1,0 +1,3294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Linear Algebra Refresher for ML & Data Mining</title>
+
+    <!-- =====================================================
+         MATHJAX
+         ===================================================== -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+           ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    #172554 0,
+                    #020617 40%
+                );
+
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        header {
+            padding: 55px 25px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #172554,
+                    #1e3a8a
+                );
+
+            border-bottom:
+                1px solid #334155;
+        }
+
+        header h1 {
+            margin: 0;
+
+            color: white;
+
+            font-size:
+                clamp(30px, 5vw, 52px);
+
+            letter-spacing: -1px;
+        }
+
+        header p {
+            margin-top: 15px;
+
+            color: #bfdbfe;
+
+            font-size: 19px;
+        }
+
+        .subtitle {
+            color: #93c5fd;
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+           ===================================================== */
+
+        .nav {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 6px;
+
+            padding: 10px;
+
+            background:
+                rgba(2, 6, 23, 0.94);
+
+            backdrop-filter:
+                blur(10px);
+
+            border-bottom:
+                1px solid #334155;
+        }
+
+        .nav button {
+            border: none;
+
+            background: #1e293b;
+
+            color: #cbd5e1;
+
+            padding: 8px 12px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+        .nav button:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+           ===================================================== */
+
+        .container {
+            width: 94%;
+
+            max-width: 1350px;
+
+            margin: auto;
+
+            padding:
+                25px 0 70px;
+        }
+
+
+        /* =====================================================
+           SECTIONS
+           ===================================================== */
+
+        .section {
+            margin:
+                28px 0;
+
+            padding:
+                30px;
+
+            background:
+                rgba(30, 41, 59, 0.93);
+
+            border:
+                1px solid #334155;
+
+            border-radius:
+                18px;
+
+            box-shadow:
+                0 15px 45px
+                rgba(0, 0, 0, 0.25);
+        }
+
+        .section h2 {
+            margin-top: 0;
+
+            color: #60a5fa;
+
+            font-size: 29px;
+
+            border-bottom:
+                1px solid #334155;
+
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #93c5fd;
+        }
+
+        .section h4 {
+            color: #c4b5fd;
+        }
+
+
+        /* =====================================================
+           GRID
+           ===================================================== */
+
+        .two-column {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 25px;
+        }
+
+        .three-column {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        @media (max-width: 900px) {
+
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        /* =====================================================
+           FORMULAS
+           ===================================================== */
+
+        .formula {
+            background:
+                #020617;
+
+            border-left:
+                4px solid #3b82f6;
+
+            border-radius:
+                10px;
+
+            padding:
+                17px;
+
+            margin:
+                15px 0;
+
+            text-align:
+                center;
+
+            font-size:
+                21px;
+
+            overflow-x:
+                auto;
+        }
+
+
+        /* =====================================================
+           CARDS
+           ===================================================== */
+
+        .card {
+            background:
+                #0f172a;
+
+            border:
+                1px solid #334155;
+
+            border-radius:
+                12px;
+
+            padding:
+                20px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+
+        /* =====================================================
+           CANVAS
+           ===================================================== */
+
+        canvas {
+            display:
+                block;
+
+            width:
+                100%;
+
+            height:
+                450px;
+
+            background:
+                #020617;
+
+            border:
+                1px solid #475569;
+
+            border-radius:
+                12px;
+        }
+
+
+        /* =====================================================
+           CONTROLS
+           ===================================================== */
+
+        .controls {
+            background:
+                #0f172a;
+
+            border:
+                1px solid #334155;
+
+            border-radius:
+                12px;
+
+            padding:
+                20px;
+        }
+
+        .control-row {
+            display:
+                grid;
+
+            grid-template-columns:
+                140px 1fr 75px;
+
+            gap:
+                10px;
+
+            align-items:
+                center;
+
+            margin:
+                13px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        input[type="number"] {
+            width:
+                75px;
+
+            padding:
+                7px;
+
+            border:
+                1px solid #475569;
+
+            background:
+                #1e293b;
+
+            color:
+                white;
+
+            border-radius:
+                6px;
+        }
+
+        select {
+            background:
+                #1e293b;
+
+            color:
+                white;
+
+            border:
+                1px solid #475569;
+
+            padding:
+                8px;
+
+            border-radius:
+                6px;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+           ===================================================== */
+
+        button.action {
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+            border:
+                none;
+
+            padding:
+                10px 16px;
+
+            border-radius:
+                8px;
+
+            cursor:
+                pointer;
+
+            margin:
+                4px;
+        }
+
+        button.action:hover {
+            background:
+                #1d4ed8;
+        }
+
+        button.green {
+            background:
+                #059669;
+        }
+
+        button.orange {
+            background:
+                #ea580c;
+        }
+
+        button.purple {
+            background:
+                #7c3aed;
+        }
+
+
+        /* =====================================================
+           VECTOR DISPLAY
+           ===================================================== */
+
+        .vector-display {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap:
+                15px;
+
+            margin-top:
+                18px;
+        }
+
+        .vector-box {
+            text-align:
+                center;
+
+            padding:
+                18px;
+
+            background:
+                #020617;
+
+            border-radius:
+                10px;
+        }
+
+        .input-vector {
+            border-top:
+                4px solid #f97316;
+        }
+
+        .output-vector {
+            border-top:
+                4px solid #22c55e;
+        }
+
+
+        /* =====================================================
+           COLORS
+           ===================================================== */
+
+        .orange {
+            color:
+                #fb923c;
+        }
+
+        .green {
+            color:
+                #4ade80;
+        }
+
+        .blue {
+            color:
+                #38bdf8;
+        }
+
+        .purple {
+            color:
+                #c084fc;
+        }
+
+        .yellow {
+            color:
+                #facc15;
+        }
+
+        .red {
+            color:
+                #fb7185;
+        }
+
+
+        /* =====================================================
+           ALERTS
+           ===================================================== */
+
+        .important {
+            background:
+                #422006;
+
+            border-left:
+                4px solid #f59e0b;
+
+            padding:
+                15px;
+
+            border-radius:
+                8px;
+        }
+
+        .success-box {
+            background:
+                #064e3b;
+
+            border-left:
+                4px solid #10b981;
+
+            padding:
+                15px;
+
+            border-radius:
+                8px;
+        }
+
+        .danger-box {
+            background:
+                #4c0519;
+
+            border-left:
+                4px solid #fb7185;
+
+            padding:
+                15px;
+
+            border-radius:
+                8px;
+        }
+
+
+        /* =====================================================
+           TABLE
+           ===================================================== */
+
+        table {
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            margin:
+                15px 0;
+        }
+
+        th,
+        td {
+            padding:
+                11px;
+
+            border:
+                1px solid #334155;
+
+            text-align:
+                center;
+        }
+
+        th {
+            background:
+                #172554;
+
+            color:
+                #bfdbfe;
+        }
+
+        td {
+            background:
+                #0f172a;
+        }
+
+
+        /* =====================================================
+           STEP FLOW
+           ===================================================== */
+
+        .flow {
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            flex-wrap:
+                wrap;
+
+            margin:
+                25px 0;
+        }
+
+        .flow-box {
+            padding:
+                16px 22px;
+
+            background:
+                #172554;
+
+            border:
+                1px solid #3b82f6;
+
+            border-radius:
+                10px;
+
+            text-align:
+                center;
+        }
+
+        .arrow {
+            font-size:
+                28px;
+
+            color:
+                #60a5fa;
+        }
+
+
+        /* =====================================================
+           CHEAT SHEET
+           ===================================================== */
+
+        .cheat {
+            overflow-x:
+                auto;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        footer {
+            text-align:
+                center;
+
+            color:
+                #94a3b8;
+
+            padding:
+                35px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header>
+
+    <h1>Linear Algebra Refresher</h1>
+
+    <p>
+        A Visual & Interactive Refresher for
+        Machine Learning and Data Mining
+    </p>
+
+    <div class="subtitle">
+        Vectors • Matrices • Geometry • Transformations • Eigenvectors • PCA • SVD
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
+<div class="nav">
+
+    <button onclick="go('motivation')">Why LA?</button>
+
+    <button onclick="go('vectors')">Vectors</button>
+
+    <button onclick="go('dotproduct')">Dot Product</button>
+
+    <button onclick="go('norms')">Norms</button>
+
+    <button onclick="go('distance')">Distance</button>
+
+    <button onclick="go('matrices')">Matrices</button>
+
+    <button onclick="go('multiplication')">Multiplication</button>
+
+    <button onclick="go('systems')">Systems</button>
+
+    <button onclick="go('transformations')">Transformations</button>
+
+    <button onclick="go('eigen')">Eigen</button>
+
+    <button onclick="go('pca')">PCA</button>
+
+    <button onclick="go('svd')">SVD</button>
+
+    <button onclick="go('cheatsheet')">Cheat Sheet</button>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- =========================================================
+     1. MOTIVATION
+     ========================================================= -->
+
+<section class="section" id="motivation">
+
+    <h2>1. Why Linear Algebra in Machine Learning?</h2>
+
+    <p>
+        Suppose we have 100,000 customers and 20 attributes
+        for each customer. How should we represent this data?
+    </p>
+
+    <table>
+
+        <tr>
+            <th>Customer</th>
+            <th>Age</th>
+            <th>Income</th>
+            <th>Purchases</th>
+            <th>Visits</th>
+        </tr>
+
+        <tr>
+            <td>C1</td>
+            <td>25</td>
+            <td>40</td>
+            <td>5</td>
+            <td>12</td>
+        </tr>
+
+        <tr>
+            <td>C2</td>
+            <td>41</td>
+            <td>75</td>
+            <td>12</td>
+            <td>20</td>
+        </tr>
+
+        <tr>
+            <td>C3</td>
+            <td>32</td>
+            <td>55</td>
+            <td>8</td>
+            <td>15</td>
+        </tr>
+
+    </table>
+
+
+    <div class="two-column">
+
+        <div>
+
+            <h3>One Customer → Vector</h3>
+
+            <div class="formula">
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                25\\
+                40\\
+                5\\
+                12
+                \end{bmatrix}
+                \]
+            </div>
+
+        </div>
+
+        <div>
+
+            <h3>Dataset → Matrix</h3>
+
+            <div class="formula">
+                \[
+                X=
+                \begin{bmatrix}
+                25&40&5&12\\
+                41&75&12&20\\
+                32&55&8&15
+                \end{bmatrix}
+                \]
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="flow">
+
+        <div class="flow-box">
+            Data
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Vectors
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Matrices
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            ML Algorithms
+        </div>
+
+    </div>
+
+
+    <div class="success-box">
+
+        <strong>Key message:</strong>
+
+        Machine learning is, to a large extent,
+        mathematics operating on vectors and matrices.
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     2. SCALARS AND VECTORS
+     ========================================================= -->
+
+<section class="section" id="vectors">
+
+    <h2>2. Scalars, Vectors and Matrices</h2>
+
+    <div class="three-column">
+
+        <div class="card">
+
+            <h3>Scalar</h3>
+
+            <div class="formula">
+                \[
+                x=5
+                \]
+            </div>
+
+            <p>
+                A single number.
+            </p>
+
+            <p>
+                Examples:
+                age, temperature,
+                learning rate.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Vector</h3>
+
+            <div class="formula">
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                x_1\\
+                x_2\\
+                \vdots\\
+                x_n
+                \end{bmatrix}
+                \]
+            </div>
+
+            <p>
+                An ordered collection of numbers.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Matrix</h3>
+
+            <div class="formula">
+                \[
+                X\in\mathbb{R}^{m\times n}
+                \]
+            </div>
+
+            <p>
+                A rectangular collection of numbers.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <h3>Vector as a Geometric Object</h3>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                3\\
+                4
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                \|\mathbf{x}\|
+                =
+                \sqrt{3^2+4^2}
+                =
+                5
+                \]
+
+            </div>
+
+            <p>
+                A vector has both <strong>direction</strong>
+                and <strong>magnitude</strong>.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="vectorCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="important">
+
+        <strong>Ask students:</strong>
+
+        If a dataset has 50 features, what is the dimension
+        of each observation vector?
+
+        <strong>Answer: 50.</strong>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     3. VECTOR ADDITION
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>3. Vector Addition</h2>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+                \[
+                \mathbf{a}
+                =
+                \begin{bmatrix}
+                1\\
+                2
+                \end{bmatrix},
+                \qquad
+                \mathbf{b}
+                =
+                \begin{bmatrix}
+                4\\
+                1
+                \end{bmatrix}
+                \]
+            </div>
+
+            <div class="formula">
+                \[
+                \mathbf{a}+\mathbf{b}
+                =
+                \begin{bmatrix}
+                5\\
+                3
+                \end{bmatrix}
+                \]
+            </div>
+
+            <p>
+                Addition is performed component by component.
+            </p>
+
+            <div class="success-box">
+
+                Vectors must have the same dimensions
+                to be added.
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <canvas id="additionCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     4. SCALAR MULTIPLICATION
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>4. Scalar Multiplication</h2>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                2\\
+                3
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                3\mathbf{x}
+                =
+                \begin{bmatrix}
+                6\\
+                9
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <p>
+                Multiplication by a scalar changes the
+                length of a vector.
+            </p>
+
+            <p>
+                Important in:
+            </p>
+
+            <ul>
+                <li>Gradient descent</li>
+                <li>Optimization</li>
+                <li>Normalization</li>
+                <li>Parameter updates</li>
+            </ul>
+
+        </div>
+
+        <div>
+
+            <canvas id="scalarCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     5. DOT PRODUCT
+     ========================================================= -->
+
+<section class="section" id="dotproduct">
+
+    <h2>5. Dot Product</h2>
+
+    <p>
+        One of the most important operations in machine learning.
+    </p>
+
+    <div class="formula">
+
+        \[
+        \mathbf{x}^{T}\mathbf{w}
+        =
+        x_1w_1+x_2w_2+\cdots+x_nw_n
+        \]
+
+    </div>
+
+
+    <div class="two-column">
+
+        <div class="controls">
+
+            <h3>Interactive Vectors</h3>
+
+            <div class="control-row">
+
+                <label>x₁</label>
+
+                <input
+                    id="dotX1"
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="0.1"
+                    value="3"
+                >
+
+                <input
+                    id="dotX1n"
+                    type="number"
+                    value="3"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>x₂</label>
+
+                <input
+                    id="dotX2"
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="0.1"
+                    value="2"
+                >
+
+                <input
+                    id="dotX2n"
+                    type="number"
+                    value="2"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>w₁</label>
+
+                <input
+                    id="dotW1"
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="0.1"
+                    value="1"
+                >
+
+                <input
+                    id="dotW1n"
+                    type="number"
+                    value="1"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>w₂</label>
+
+                <input
+                    id="dotW2"
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="0.1"
+                    value="4"
+                >
+
+                <input
+                    id="dotW2n"
+                    type="number"
+                    value="4"
+                    step="0.1"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="dotCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="dotResult"
+        class="formula">
+    </div>
+
+
+    <div class="ml-box">
+
+        <h3>Machine Learning Connection</h3>
+
+        <div class="formula">
+
+            \[
+            \hat{y}
+            =
+            \mathbf{w}^{T}\mathbf{x}+b
+            \]
+
+        </div>
+
+        <p>
+            A linear model is essentially a weighted sum
+            of the features.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     6. DOT PRODUCT AND ANGLE
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>6. Dot Product and Angle</h2>
+
+    <div class="formula">
+
+        \[
+        \mathbf{x}^{T}\mathbf{y}
+        =
+        \|\mathbf{x}\|
+        \|\mathbf{y}\|
+        \cos\theta
+        \]
+
+    </div>
+
+    <div class="formula">
+
+        \[
+        \cos\theta
+        =
+        \frac{
+        \mathbf{x}^{T}\mathbf{y}
+        }{
+        \|\mathbf{x}\|\|\mathbf{y}\|
+        }
+        \]
+
+    </div>
+
+
+    <div class="two-column">
+
+        <div>
+
+            <canvas id="angleCanvas"></canvas>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Cosine Similarity</h3>
+
+            <div class="formula">
+
+                \[
+                \operatorname{cosine}(x,y)
+                =
+                \frac{x^Ty}
+                {\|x\|\|y\|}
+                \]
+
+            </div>
+
+            <p>Useful in:</p>
+
+            <ul>
+                <li>Document similarity</li>
+                <li>Text mining</li>
+                <li>Information retrieval</li>
+                <li>Recommendation</li>
+                <li>Embeddings</li>
+            </ul>
+
+            <div class="success-box">
+
+                If two vectors point in nearly the same direction:
+
+                \[
+                \cos\theta\approx1
+                \]
+
+                they are highly similar in direction.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     7. NORMS
+     ========================================================= -->
+
+<section class="section" id="norms">
+
+    <h2>7. Vector Norms</h2>
+
+    <p>
+        A norm measures the size or magnitude of a vector.
+    </p>
+
+
+    <div class="two-column">
+
+        <div class="card">
+
+            <h3>L2 / Euclidean Norm</h3>
+
+            <div class="formula">
+
+                \[
+                \|\mathbf{x}\|_2
+                =
+                \sqrt{
+                x_1^2+x_2^2+\cdots+x_n^2
+                }
+                \]
+
+            </div>
+
+            <p>
+                For
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                3\\4
+                \end{bmatrix}
+                \]
+            </p>
+
+            <div class="formula">
+
+                \[
+                \|\mathbf{x}\|_2=5
+                \]
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>L1 Norm</h3>
+
+            <div class="formula">
+
+                \[
+                \|\mathbf{x}\|_1
+                =
+                \sum_i|x_i|
+                \]
+
+            </div>
+
+            <p>
+                Example:
+            </p>
+
+            <div class="formula">
+
+                \[
+                \left\|
+                \begin{bmatrix}
+                -2\\3\\-4
+                \end{bmatrix}
+                \right\|_1
+                =
+                9
+                \]
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="ml-box">
+
+        <h3>ML Connection</h3>
+
+        <div class="formula">
+
+            \[
+            L_1:\quad
+            \lambda\|\mathbf{w}\|_1
+            \]
+
+            \[
+            L_2:\quad
+            \lambda\|\mathbf{w}\|_2^2
+            \]
+
+        </div>
+
+        <p>
+            Norms appear in regularization, optimization,
+            distance calculations, and sparse modeling.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     8. DISTANCE
+     ========================================================= -->
+
+<section class="section" id="distance">
+
+    <h2>8. Distance Between Data Points</h2>
+
+    <div class="formula">
+
+        \[
+        d(\mathbf{x},\mathbf{y})
+        =
+        \|\mathbf{x}-\mathbf{y}\|_2
+        \]
+
+    </div>
+
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                \mathbf{x}
+                =
+                \begin{bmatrix}
+                1\\2
+                \end{bmatrix}
+                ,
+                \quad
+                \mathbf{y}
+                =
+                \begin{bmatrix}
+                4\\6
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                \mathbf{x}-\mathbf{y}
+                =
+                \begin{bmatrix}
+                -3\\-4
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                d(\mathbf{x},\mathbf{y})=5
+                \]
+
+            </div>
+
+            <h3>Data Mining</h3>
+
+            <ul>
+                <li>K-means</li>
+                <li>K-nearest neighbors</li>
+                <li>Hierarchical clustering</li>
+                <li>Anomaly detection</li>
+            </ul>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="distanceCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     9. MATRICES
+     ========================================================= -->
+
+<section class="section" id="matrices">
+
+    <h2>9. Matrices</h2>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                A=
+                \begin{bmatrix}
+                1&2&3\\
+                4&5&6
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <p>
+                This is a \(2\times3\) matrix.
+            </p>
+
+            <ul>
+                <li>2 rows</li>
+                <li>3 columns</li>
+            </ul>
+
+        </div>
+
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                X\in\mathbb{R}^{m\times n}
+                \]
+
+            </div>
+
+            <p>
+                If we have \(m\) observations and \(n\) features:
+            </p>
+
+            <div class="formula">
+
+                \[
+                X\in\mathbb{R}^{m\times n}
+                \]
+
+            </div>
+
+            <p>
+                Example:
+            </p>
+
+            <div class="formula">
+
+                \[
+                X\in\mathbb{R}^{1000\times20}
+                \]
+
+            </div>
+
+            <p>
+                1,000 observations and 20 features.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     10. MATRIX ADDITION
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>10. Matrix Addition</h2>
+
+    <div class="formula">
+
+        \[
+        A=
+        \begin{bmatrix}
+        1&2\\
+        3&4
+        \end{bmatrix}
+        ,
+        \quad
+        B=
+        \begin{bmatrix}
+        5&6\\
+        7&8
+        \end{bmatrix}
+        \]
+
+    </div>
+
+    <div class="formula">
+
+        \[
+        A+B
+        =
+        \begin{bmatrix}
+        6&8\\
+        10&12
+        \end{bmatrix}
+        \]
+
+    </div>
+
+    <div class="important">
+
+        Matrices must have the same dimensions to be added.
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     11. MATRIX MULTIPLICATION
+     ========================================================= -->
+
+<section class="section" id="multiplication">
+
+    <h2>11. Matrix Multiplication</h2>
+
+    <div class="formula">
+
+        \[
+        (m\times n)(n\times p)
+        =
+        (m\times p)
+        \]
+
+    </div>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                A=
+                \begin{bmatrix}
+                1&2\\
+                3&4
+                \end{bmatrix}
+                \]
+
+                \[
+                B=
+                \begin{bmatrix}
+                5&6\\
+                7&8
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                AB=
+                \begin{bmatrix}
+                19&22\\
+                43&50
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="matrixMultiplicationCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="danger-box">
+
+        <strong>Important:</strong>
+
+        Matrix multiplication is generally not commutative.
+
+        \[
+        AB\neq BA
+        \]
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     12. MATRIX × VECTOR
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>12. Matrix × Vector</h2>
+
+    <div class="formula">
+
+        \[
+        W=
+        \begin{bmatrix}
+        w_{11}&w_{12}\\
+        w_{21}&w_{22}
+        \end{bmatrix}
+        ,
+        \quad
+        \mathbf{x}
+        =
+        \begin{bmatrix}
+        x_1\\x_2
+        \end{bmatrix}
+        \]
+
+    </div>
+
+    <div class="formula">
+
+        \[
+        W\mathbf{x}
+        =
+        \begin{bmatrix}
+        w_{11}x_1+w_{12}x_2\\
+        w_{21}x_1+w_{22}x_2
+        \end{bmatrix}
+        \]
+
+    </div>
+
+
+    <div class="ml-box">
+
+        <h3>Neural Network Connection</h3>
+
+        <div class="formula">
+
+            \[
+            \mathbf{z}=W\mathbf{x}+\mathbf{b}
+            \]
+
+        </div>
+
+        <p>
+            A matrix transforms the input vector and
+            the bias shifts the result.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     13. TRANSPOSE
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>13. Transpose</h2>
+
+    <div class="two-column">
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                A=
+                \begin{bmatrix}
+                1&2&3\\
+                4&5&6
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="formula">
+
+                \[
+                A^T=
+                \begin{bmatrix}
+                1&4\\
+                2&5\\
+                3&6
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="formula">
+
+        \[
+        (AB)^T=B^TA^T
+        \]
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     14. IDENTITY AND INVERSE
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>14. Identity Matrix and Inverse</h2>
+
+    <div class="two-column">
+
+        <div class="card">
+
+            <h3>Identity</h3>
+
+            <div class="formula">
+
+                \[
+                I=
+                \begin{bmatrix}
+                1&0\\
+                0&1
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                AI=IA=A
+                \]
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Inverse</h3>
+
+            <div class="formula">
+
+                \[
+                AA^{-1}
+                =
+                A^{-1}A
+                =
+                I
+                \]
+
+            </div>
+
+            <p>
+                Not every matrix has an inverse.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="important">
+
+        In machine learning, the inverse/pseudoinverse appears
+        in solving linear systems and least-squares problems.
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     15. SYSTEMS
+     ========================================================= -->
+
+<section class="section" id="systems">
+
+    <h2>15. Systems of Linear Equations</h2>
+
+    <div class="formula">
+
+        \[
+        2x+y=5
+        \]
+
+        \[
+        x-y=1
+        \]
+
+    </div>
+
+    <p>
+        Write the system as:
+    </p>
+
+    <div class="formula">
+
+        \[
+        A\mathbf{x}=\mathbf{b}
+        \]
+
+    </div>
+
+    <div class="formula">
+
+        \[
+        \begin{bmatrix}
+        2&1\\
+        1&-1
+        \end{bmatrix}
+        \begin{bmatrix}
+        x\\
+        y
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+        5\\
+        1
+        \end{bmatrix}
+        \]
+
+    </div>
+
+
+    <div class="success-box">
+
+        <strong>ML connection:</strong>
+
+        Many machine learning problems can ultimately
+        be expressed in terms of systems of equations.
+
+        For example:
+
+        \[
+        X^TXw=X^Ty
+        \]
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     16. LINEAR TRANSFORMATION
+     ========================================================= -->
+
+<section class="section" id="transformations">
+
+    <h2>16. Linear Transformations</h2>
+
+    <div class="formula">
+
+        \[
+        \boxed{
+        \mathbf{y}=A\mathbf{x}
+        }
+        \]
+
+    </div>
+
+    <p>
+        Think of a matrix as an operator that transforms vectors.
+    </p>
+
+
+    <div class="three-column">
+
+        <div class="card">
+
+            <h3>Scaling</h3>
+
+            <div class="formula">
+
+                \[
+                \begin{bmatrix}
+                2&0\\
+                0&2
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Reflection</h3>
+
+            <div class="formula">
+
+                \[
+                \begin{bmatrix}
+                1&0\\
+                0&-1
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Projection</h3>
+
+            <div class="formula">
+
+                \[
+                \begin{bmatrix}
+                1&0\\
+                0&0
+                \end{bmatrix}
+                \]
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <h3>Interactive Transformation</h3>
+
+    <div class="two-column">
+
+        <div class="controls">
+
+            <h3>Matrix \(A\)</h3>
+
+            <div class="control-row">
+
+                <label>a</label>
+
+                <input
+                    id="ta"
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value="2"
+                >
+
+                <input
+                    id="tan"
+                    type="number"
+                    value="2"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>b</label>
+
+                <input
+                    id="tb"
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value="0"
+                >
+
+                <input
+                    id="tbn"
+                    type="number"
+                    value="0"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>c</label>
+
+                <input
+                    id="tc"
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value="0"
+                >
+
+                <input
+                    id="tcn"
+                    type="number"
+                    value="0"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="control-row">
+
+                <label>d</label>
+
+                <input
+                    id="td"
+                    type="range"
+                    min="-3"
+                    max="3"
+                    step="0.1"
+                    value="2"
+                >
+
+                <input
+                    id="tdn"
+                    type="number"
+                    value="2"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <hr>
+
+
+            <button
+                class="action"
+                onclick="presetTransform('scale')">
+                Scaling
+            </button>
+
+            <button
+                class="action green"
+                onclick="presetTransform('rotate')">
+                Rotation
+            </button>
+
+            <button
+                class="action orange"
+                onclick="presetTransform('reflect')">
+                Reflection
+            </button>
+
+            <button
+                class="action purple"
+                onclick="presetTransform('project')">
+                Projection
+            </button>
+
+            <button
+                class="action"
+                onclick="presetTransform('shear')">
+                Shearing
+            </button>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="transformCanvas"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="transformResult"
+        class="formula">
+    </div>
+
+
+    <div class="important">
+
+        A linear transformation preserves:
+
+        \[
+        T(x+y)=T(x)+T(y)
+        \]
+
+        and
+
+        \[
+        T(cx)=cT(x)
+        \]
+
+        Also:
+
+        \[
+        T(0)=0
+        \]
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     17. LINEAR VS NONLINEAR
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>17. Linear vs. Non-Linear</h2>
+
+    <div class="two-column">
+
+        <div class="success-box">
+
+            <h3>Linear</h3>
+
+            <div class="formula">
+
+                \[
+                T(x,y)=(2x,2y)
+                \]
+
+            </div>
+
+            <p>
+                The origin remains the origin.
+            </p>
+
+        </div>
+
+
+        <div class="danger-box">
+
+            <h3>Not Linear</h3>
+
+            <div class="formula">
+
+                \[
+                T(x,y)=(x+2,y)
+                \]
+
+            </div>
+
+            <p>
+
+                \[
+                T(0,0)=(2,0)
+                \]
+
+                Therefore it is not linear.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="formula">
+
+        \[
+        \mathbf{z}=W\mathbf{x}+\mathbf{b}
+        \]
+
+    </div>
+
+    <p>
+        Strictly speaking, adding the bias makes this an
+        <strong>affine transformation</strong>.
+    </p>
+
+</section>
+
+
+<!-- =========================================================
+     18. LINEAR INDEPENDENCE
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>18. Linear Independence</h2>
+
+    <div class="two-column">
+
+        <div>
+
+            <h3>Independent</h3>
+
+            <div class="formula">
+
+                \[
+                \begin{bmatrix}
+                1\\0
+                \end{bmatrix},
+                \quad
+                \begin{bmatrix}
+                0\\1
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <p>
+                Neither vector can be produced by scaling
+                the other.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>Dependent</h3>
+
+            <div class="formula">
+
+                \[
+                \begin{bmatrix}
+                1\\2
+                \end{bmatrix},
+                \quad
+                \begin{bmatrix}
+                2\\4
+                \end{bmatrix}
+                \]
+
+            </div>
+
+            <p>
+
+                \[
+                \begin{bmatrix}
+                2\\4
+                \end{bmatrix}
+                =
+                2
+                \begin{bmatrix}
+                1\\2
+                \end{bmatrix}
+                \]
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="ml-box">
+
+        <h3>ML Connection</h3>
+
+        <p>
+            Linear dependence is related to redundant features,
+            multicollinearity, rank, and dimensionality reduction.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     19. RANK
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>19. Rank</h2>
+
+    <div class="formula">
+
+        \[
+        A=
+        \begin{bmatrix}
+        1&2\\
+        2&4
+        \end{bmatrix}
+        \]
+
+    </div>
+
+    <p>
+        The second row is twice the first.
+    </p>
+
+    <div class="formula">
+
+        \[
+        \operatorname{rank}(A)=1
+        \]
+
+    </div>
+
+    <p>
+        Although the matrix is \(2\times2\), it contains only
+        one independent direction.
+    </p>
+
+    <div class="success-box">
+
+        Rank is useful for understanding:
+
+        <ul>
+            <li>Redundant features</li>
+            <li>Low-dimensional structure</li>
+            <li>Low-rank approximation</li>
+            <li>Recommender systems</li>
+            <li>PCA</li>
+            <li>SVD</li>
+        </ul>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     20. EIGENVECTORS
+     ========================================================= -->
+
+<section class="section" id="eigen">
+
+    <h2>20. Eigenvalues and Eigenvectors</h2>
+
+    <div class="formula">
+
+        \[
+        \boxed{
+        A\mathbf{v}=\lambda\mathbf{v}
+        }
+        \]
+
+    </div>
+
+    <div class="two-column">
+
+        <div>
+
+            <p>
+                An eigenvector is a special direction that
+                remains on the same line after transformation.
+            </p>
+
+            <p>
+                Only its magnitude changes.
+            </p>
+
+            <div class="formula">
+
+                \[
+                A\mathbf{v}=3\mathbf{v}
+                \]
+
+            </div>
+
+            <p>
+                means the vector was stretched by a factor of 3.
+            </p>
+
+
+            <div class="controls">
+
+                <h3>Eigen Transformation</h3>
+
+                <div class="control-row">
+
+                    <label>a</label>
+
+                    <input
+                        id="ea"
+                        type="range"
+                        min="-2"
+                        max="2"
+                        step="0.1"
+                        value="2"
+                    >
+
+                    <input
+                        id="ean"
+                        type="number"
+                        value="2"
+                        step="0.1"
+                    >
+
+                </div>
+
+
+                <div class="control-row">
+
+                    <label>b</label>
+
+                    <input
+                        id="eb"
+                        type="range"
+                        min="-2"
+                        max="2"
+                        step="0.1"
+                        value="0"
+                    >
+
+                    <input
+                        id="ebn"
+                        type="number"
+                        value="0"
+                        step="0.1"
+                    >
+
+                </div>
+
+
+                <div class="control-row">
+
+                    <label>c</label>
+
+                    <input
+                        id="ec"
+                        type="range"
+                        min="-2"
+                        max="2"
+                        step="0.1"
+                        value="0"
+                    >
+
+                    <input
+                        id="ecn"
+                        type="number"
+                        value="0"
+                        step="0.1"
+                    >
+
+                </div>
+
+
+                <div class="control-row">
+
+                    <label>d</label>
+
+                    <input
+                        id="ed"
+                        type="range"
+                        min="-2"
+                        max="2"
+                        step="0.1"
+                        value="3"
+                    >
+
+                    <input
+                        id="edn"
+                        type="number"
+                        value="3"
+                        step="0.1"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <canvas id="eigenCanvas"></canvas>
+
+            <div
+                id="eigenResult"
+                class="formula">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="ml-box">
+
+        <h3>Why ML students care</h3>
+
+        <ul>
+            <li>PCA</li>
+            <li>Covariance analysis</li>
+            <li>Dimensionality reduction</li>
+            <li>Spectral clustering</li>
+            <li>Graph-based learning</li>
+        </ul>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     21. PCA
+     ========================================================= -->
+
+<section class="section" id="pca">
+
+    <h2>21. PCA — Principal Component Analysis</h2>
+
+    <p>
+        PCA finds important directions in high-dimensional data
+        and projects the data onto those directions.
+    </p>
+
+
+    <div class="flow">
+
+        <div class="flow-box">
+            High-dimensional data
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Covariance Matrix
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Eigenvectors
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Projection
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-box">
+            Reduced Data
+        </div>
+
+    </div>
+
+
+    <div class="two-column">
+
+        <div>
+
+            <h3>Original Data</h3>
+
+            <canvas id="pcaCanvas"></canvas>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>The intuition</h3>
+
+            <p>
+                Suppose data forms an elongated cloud.
+            </p>
+
+            <p>
+                PCA finds the direction along which the data
+                varies the most.
+            </p>
+
+            <div class="formula">
+
+                \[
+                \text{Principal Component}
+                =
+                \text{important direction}
+                \]
+
+            </div>
+
+            <div class="formula">
+
+                \[
+                X
+                \rightarrow
+                \text{eigenvectors/eigenvalues}
+                \]
+
+            </div>
+
+            <p>
+                The eigenvectors give the principal directions,
+                while the eigenvalues indicate the variance
+                associated with those directions.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     22. SVD
+     ========================================================= -->
+
+<section class="section" id="svd">
+
+    <h2>22. Singular Value Decomposition — SVD</h2>
+
+    <div class="formula">
+
+        \[
+        \boxed{
+        A=U\Sigma V^T
+        }
+        \]
+
+    </div>
+
+    <div class="three-column">
+
+        <div class="card">
+
+            <h3>\(U\)</h3>
+
+            <p>
+                Left singular vectors.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>\(\Sigma\)</h3>
+
+            <p>
+                Singular values.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>\(V^T\)</h3>
+
+            <p>
+                Transposed right singular vectors.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="success-box">
+
+        <strong>Applications:</strong>
+
+        <ul>
+            <li>PCA</li>
+            <li>Dimensionality reduction</li>
+            <li>Image compression</li>
+            <li>Recommender systems</li>
+            <li>Latent semantic analysis</li>
+            <li>Low-rank approximation</li>
+        </ul>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     23. UNIFIED ML EXAMPLE
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>23. Unified Machine Learning Example</h2>
+
+    <p>
+        Consider three students with three features:
+    </p>
+
+    <div class="formula">
+
+        \[
+        X=
+        \begin{bmatrix}
+        2&80&5\\
+        4&70&7\\
+        6&90&8
+        \end{bmatrix}
+        \]
+
+    </div>
+
+    <p>
+        Columns:
+        study hours, attendance, assignments.
+    </p>
+
+
+    <h3>Prediction</h3>
+
+    <div class="formula">
+
+        \[
+        \hat{y}=Xw+b
+        \]
+
+    </div>
+
+
+    <h3>Distance</h3>
+
+    <div class="formula">
+
+        \[
+        d(x_i,x_j)
+        =
+        \|x_i-x_j\|_2
+        \]
+
+    </div>
+
+
+    <h3>Similarity</h3>
+
+    <div class="formula">
+
+        \[
+        \cos\theta
+        =
+        \frac{x_i^Tx_j}
+        {\|x_i\|\|x_j\|}
+        \]
+
+    </div>
+
+
+    <h3>Dimensionality Reduction</h3>
+
+    <div class="formula">
+
+        \[
+        X
+        \rightarrow
+        PCA
+        \]
+
+    </div>
+
+
+    <div class="success-box">
+
+        One dataset can bring together almost the entire
+        linear algebra refresher.
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     24. QUICK CHECK QUESTIONS
+     ========================================================= -->
+
+<section class="section">
+
+    <h2>24. Quick Classroom Checks</h2>
+
+    <div class="card">
+
+        <h3>Question 1</h3>
+
+        <p>
+            If
+            \[
+            x\in\mathbb{R}^5
+            \]
+            how many features does \(x\) represent?
+        </p>
+
+        <button
+            class="action"
+            onclick="showAnswer('q1')">
+            Show Answer
+        </button>
+
+        <p id="q1" style="display:none">
+            <strong class="green">5 features.</strong>
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Question 2</h3>
+
+        <p>
+            If
+            \[
+            X\in\mathbb{R}^{1000\times50}
+            \]
+            what does it mean?
+        </p>
+
+        <button
+            class="action"
+            onclick="showAnswer('q2')">
+            Show Answer
+        </button>
+
+        <p id="q2" style="display:none">
+            <strong class="green">
+                1,000 observations and 50 features.
+            </strong>
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Question 3</h3>
+
+        <p>
+            Can we multiply
+            \[
+            (5\times3)(3\times2)?
+            \]
+        </p>
+
+        <button
+            class="action"
+            onclick="showAnswer('q3')">
+            Show Answer
+        </button>
+
+        <p id="q3" style="display:none">
+            <strong class="green">
+                Yes. The result is \(5\times2\).
+            </strong>
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Question 4</h3>
+
+        <p>
+            What does
+            \[
+            x^Tw
+            \]
+            produce?
+        </p>
+
+        <button
+            class="action"
+            onclick="showAnswer('q4')">
+            Show Answer
+        </button>
+
+        <p id="q4" style="display:none">
+            <strong class="green">
+                A scalar.
+            </strong>
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>Question 5</h3>
+
+        <p>
+            What does \(Wx\) represent?
+        </p>
+
+        <button
+            class="action"
+            onclick="showAnswer('q5')">
+            Show Answer
+        </button>
+
+        <p id="q5" style="display:none">
+            <strong class="green">
+                A linear transformation of vector \(x\).
+            </strong>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     25. CHEAT SHEET
+     ========================================================= -->
+
+<section class="section" id="cheatsheet">
+
+    <h2>25. Final Linear Algebra Cheat Sheet</h2>
+
+    <div class="cheat">
+
+        <table>
+
+            <tr>
+                <th>Concept</th>
+                <th>Formula</th>
+                <th>ML / Data Mining</th>
+            </tr>
+
+            <tr>
+                <td>Vector</td>
+                <td>\(\mathbf{x}\)</td>
+                <td>Data point / features</td>
+            </tr>
+
+            <tr>
+                <td>Matrix</td>
+                <td>\(X\)</td>
+                <td>Dataset</td>
+            </tr>
+
+            <tr>
+                <td>Dot Product</td>
+                <td>\(x^Tw\)</td>
+                <td>Linear prediction</td>
+            </tr>
+
+            <tr>
+                <td>Norm</td>
+                <td>\(\|x\|\)</td>
+                <td>Magnitude / regularization</td>
+            </tr>
+
+            <tr>
+                <td>Distance</td>
+                <td>\(\|x-y\|\)</td>
+                <td>KNN / clustering</td>
+            </tr>
+
+            <tr>
+                <td>Cosine Similarity</td>
+                <td>\(\frac{x^Ty}{\|x\|\|y\|}\)</td>
+                <td>Text / embeddings</td>
+            </tr>
+
+            <tr>
+                <td>Transpose</td>
+                <td>\(X^T\)</td>
+                <td>Covariance / regression</td>
+            </tr>
+
+            <tr>
+                <td>Matrix Multiplication</td>
+                <td>\(AB\)</td>
+                <td>ML transformations</td>
+            </tr>
+
+            <tr>
+                <td>Inverse</td>
+                <td>\(A^{-1}\)</td>
+                <td>Linear systems</td>
+            </tr>
+
+            <tr>
+                <td>Rank</td>
+                <td>\(\operatorname{rank}(A)\)</td>
+                <td>Independent information</td>
+            </tr>
+
+            <tr>
+                <td>Eigenvector</td>
+                <td>\(Av=\lambda v\)</td>
+                <td>PCA</td>
+            </tr>
+
+            <tr>
+                <td>Eigenvalue</td>
+                <td>\(\lambda\)</td>
+                <td>Variance / scaling</td>
+            </tr>
+
+            <tr>
+                <td>SVD</td>
+                <td>\(A=U\Sigma V^T\)</td>
+                <td>PCA / low-rank approximation</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <div class="formula">
+
+        \[
+        \boxed{
+        \text{Vectors}
+        \rightarrow
+        \text{Matrices}
+        \rightarrow
+        \text{Transformations}
+        \rightarrow
+        \text{ML Algorithms}
+        }
+        \]
+
+    </div>
+
+
+    <div class="success-box">
+
+        <strong>Final message for students:</strong>
+
+        <br><br>
+
+        Machine learning transforms data.
+
+        <br>
+
+        Linear algebra tells us how.
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+<footer>
+
+    Linear Algebra Refresher • Machine Learning & Data Mining
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script src="linear_algebra_refresher.js"></script>
+
+</body>
+</html>
