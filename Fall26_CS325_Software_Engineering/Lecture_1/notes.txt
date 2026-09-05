@@ -1,0 +1,192 @@
+Title slide: Fall 2026, CS325 Software Engineering 
+
+Slide: Introduction of students and instructor
+
+Slide: Instructor Details
+
+Office Location: S18, 2nd Floor, New Academic Block
+Office Hours: Tues, Thurs, 10 am – 11 am, or by appointment
+Contact: farah.saeed@giki.edu.pk
+WhatsApp: Reach out for quick queries
+
+Slide : Goal:
+Software Engineering introduces students to the principles and practices of building reliable software and managing projects effectively.
+- Learning to Build software that works well 
+- Learning to Manage projects that succeed. 
+
+Slide : Logistics:
+Location and time:
+ Mon 10:30AM - 11:20AM, LH8
+ Tues 10:30AM - 11:20AM, LH4
+ Thurs 10:30AM - 11:20AM, LH4
+
+Course slides on MS Teams: code
+
+Course Details:
+Credit hours: 3
+Prerequisites: Programming fundamentals, OOP
+
+
+Slide:
+Course Learning Outcomes:
+Sr. No	Course Learning Outcomes*	WA & SA GA	Attribute description	Bloom’s Taxonomy
+CLO_1	Understand software engineering principles and project management techniques.	GA 12	Lifelong learning	C2
+CLO_2	Analyze various software development lifecycle (SDLC) models (e.g., Waterfall, Agile, Spiral) to select the most appropriate model for a specific software project based on its requirements, constraints, and risks.	GA 2	Problem Analysis	C4
+CLO_3	Apply software engineering principles and project management techniques for a certain software project.	GA 3	Design /Development Solutions	C3
+CLO_4	Implement software engineering principles and project management techniques for a collaborative software development environment.	GA 9	Individual and Teamwork	C3
+
+Slide:
+CLOs Assessment Mechanism
+Assessment Tools	CLO_1	CLO_2	CLO_3	CLO_4
+Quizzes	30%	0%	0%	0%
+Assignments	0%	20%	30%	0%
+Project	0%	20%	0%	100%
+Mid Term	35%	30%	35%	0%
+Final Term	35%	30%	35%	0%
+
+Slide:
+Reference Material
+Text books
+Software Engineering Ian Sommerville 11 edition
+Pragmatic Programmer
+Clean code
+
+Slide: course content 
+Week 01	                 Introduction to SE
+    • Introduction to SE
+•	Software Ethics and Software Development Lifecycle
+•	Software Process
+Week 02	Software Process Models & Projects
+•	Waterfall, Spiral, Incremental, Iterative, Agile
+•	Impact of process model choice on project success/failure
+•	Case studies of projects
+Week 03	Agile Project Management
+•	Agile principles
+•	Scrum framework (roles, artifacts, ceremonies)
+•	Kanban boards & XP practices
+•	Agile vs Traditional project management
+•	Jira Hands on
+Week 04	DevOps
+•	DevOps Introduction
+•	Version control git (branching, merging, pull requests)
+•	CI CD pipelines
+Week 05	Requirements Engineering for Projects
+•	Requirements elicitation techniques (interviews, workshops, brainstorming)
+•	Writing Software Requirements Specification (SRS)
+•	User stories & product backlogs
+Week 06	System Modeling
+•	Context Models, Interaction Models
+•	Structural Models
+•	Behavioral Models
+Week 07	Architectural Design
+•	Architectural design decisions
+•	Architectural views 
+•	Architectural patterns
+•	Application architectures
+Week 08	Design and Implementation
+•	Object Oriented Design through UML
+•	Design Patterns
+•	Implementation issues
+•	Open source development
+Week 09	Project MVP presentations
+Week 10	Software Testing
+•	Development Testing
+•	Test driven development
+•	Release Testing
+•	User Testing
+Week 11	Software Evolution and Modern Software Development
+•	Evolution process, Legacy systems
+•	Software maintainance
+•	AI software Development
+Week 12	Project Management
+•	Planning – Work Breakdown Structures (WBS)
+•	Expert judgment
+•	Function point analysis
+•	COCOMO model (basic)
+Week 13	Project Scheduling
+•	Gantt charts (MS Project/Excel)
+•	Critical Path Method (CPM)
+•	Program Evaluation Review Technique (PERT)
+•	Tracking project schedules
+Week 14	Software Quality Assurance (SQA) and Project Monitoring
+•	Quality planning
+•	Reviews and inspections
+Project Monitoring & Control
+•	Tracking progress (Burndown charts, velocity)
+•	Earned Value Management (EVM) basics
+•	Key Performance Indicators (KPIs) for projects
+Week 15	Final Presentations & Exam
+•	Group project presentations (project report + viva)
+•	Course review and final exam
+
+Slide :
+Assessments:
+Assignment: 5%
+Quiz:10%
+Project: 15%
+Mid Exam: 30%
+Final Exam: 40%
+Total: 100%
+
+
+Slide:
+Notes: 
+- Assignment due on date and time mentioned on the pdf file. Few hours extra allowed for submission. Assignments after that may not be accepted.
+- 5 Quizzes and two retake quizzes.
+- Follow all instructions for each assessment.
+- Attendance university policy is 100% attendance. Check your attendance when it is being marked. If you want to update later, get signature from the batch advisor.
+- Quiz: Assessment cancelled on academic dishonesty.
+- Exam: University policy for academic honesty.
+
+Slide:
+Project: Unique and Idea for Software utilizing AI features. without costly apis
+Project idea discussion meeting by 20 Sep. 
+Project mid presentation after mid exam
+Project final presentation before final exam.
+
+Slide: 
+How to succeed:
+Attentive Listening 
+ Lectures are key. Grab those concepts.
+Attend All Classes 
+ Consistency is crucial. Don't miss out.
+Being on time 
+ Arrive in class on time.
+
+
+Slide: What is software engineering
+Software and Engineering
+
+Engineering: Engineering is the practice of systematically applying natural science and mathematics to design and improve systems, devices, or processes that solve problems under constraints. Wikipedia
+
+Software: Software is a set of instructions and documentation that tells a computer what to do or how to perform a task. Wikipedia
+
+
+Software: 
+Application software e.g. facebook, word processor, food delivery app.
+System software e.g. firmware, word processor, food delivery app.
+
+
+Software engineering is an engineering discipline that is concerned
+with all aspects of software production from initial conception to
+operation and maintenance.
+
+Software Development LifeCycle
+
+Slide:
+Myths of Software Engineering:
+
+Software engineering is only coding. 
+
+We dont need software engineering because of AI. Software engineering fundamentals matter more than ever now. As we add more features, codebase grows and chaos increases. Software engineering fundamentals is required on organize the complexity. AI models depends on input. Complex input more hallucination.
+
+Software engineering is only prompt engineering. We have to steer the agents. We have to think long term.
+
+We dont need software engineers because of AI agents: AI agents have short term memory. Their context is limited to certain number of tokens. 
+
+Software is just a program: Software is not just a program or programs but also includes all electronic documentation that
+is needed by system users, quality assurance staff, and developers.
+
+Software engineering is required by Software Engineers only: it is required by AI engineers, data engineers.
+
+This course covers hands on and theory
