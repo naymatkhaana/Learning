@@ -1,0 +1,343 @@
+
+
+----------------------------------------------------------------------------------
+DS461 — Big Data Analytics
+
+Fall 2026
+
+---
+Slide 2 — Course Logistics
+
+Instructor Office
+
+Location: S18, 2nd Floor, New Academic Block
+Office hours: Tuesday & Thursday, 10:00–11:00 AM
+Or by appointment
+
+Contact
+
+Email: farah.saeed@giki.edu.pk
+WhatsApp: For quick queries
+
+Class Schedule
+
+Monday — 10:30–11:20 AM — LH8
+Tuesday — 10:30–11:20 AM — LH4
+Thursday — 10:30–11:20 AM — LH4
+
+Course Materials
+
+Slides and announcements: MS Teams
+
+---
+Course 
+Slide 3 — What Is This Course About?
+Course Goal
+
+This course focuses on:
+
+Data mining and Machine learning for large scale datasets i.e. too large for a single machine
+
+Question
+How do we make data mining and machine learning work when the data no longer fits on one computer?
+---
+
+Slide 4 — Big Data Analytics
+
+Machine learning and deep learning have achieved remarkable results.
+
+But successful ML/DL systems often depend on:
+
+Big Data
+Compute
+
+More data + more compute → increasingly capable models and systems
+
+The algorithms themselves are not necessarily new.
+
+Many fundamental ideas behind modern ML were developed decades ago.
+
+What changed?
+
+Data became enormous.
+GPUs and distributed systems became widely available.
+Organizations began collecting data at unprecedented scale.
+
+---
+
+Course Details
+Slide  — Course Details
+Course Information
+Course: DS461 Big Data Analytics
+Credit Hours: 3
+Duration: 15 weeks
+Prerequisites
+Linear Algebra
+Probability & Statistics
+Programming Fundamentals
+Course Nature
+
+Research-oriented + hands-on
+
+
+Theory → Algorithms → Implementation → Experiments → Research
+
+Slide — Textbook & References
+Primary Text
+
+Mining of Massive Datasets — 3rd Edition
+
+Jure Leskovec
+Anand Rajaraman
+Jeffrey D. Ullman
+
+Additional Resources
+MMDS Companion Site
+Stanford CS246
+Stanford CS341
+Georgia Tech CSE6242
+
+Course slides and resources: MS Teams
+---
+Course Roadmap
+Slide 13 — Course Roadmap
+From Foundations to Large-Scale Systems
+
+Module 1 — Foundations
+
+Introduction
+Linear Algebra Refresher
+
+↓
+
+Module 2 — Distributed Frameworks
+
+MapReduce
+Apache Spark
+
+↓
+
+Module 3 — Similarity & Hashing
+
+Locality-Sensitive Hashing
+
+↓
+
+Module 4 — Dimensionality Reduction
+
+Reducing high-dimensional data
+
+↓
+
+Module 5 — Graph Analytics
+
+Graph analytics
+PageRank
+Recommendations & Spam
+Community Detection
+
+↓
+
+Module 6 — Scale & Streams
+
+Large-Scale Machine Learning
+Mining Data Streams
+Project Presentations
+Slide 14 — Module 1: Foundations
+Module 1 — Foundations
+
+Goal: Build the mathematical and conceptual foundations for large-scale data processing.
+
+Week 1
+
+Introduction
+Linear Algebra Refresher
+Why?
+
+Many large-scale algorithms rely on:
+
+Vectors
+Matrices
+Similarity
+Distance
+Graphs
+Probability
+Slide 15 — Module 2: Distributed Frameworks
+Module 2 — Distributed Frameworks
+
+How do we actually process massive datasets?
+
+Week 2
+
+MapReduce
+
+Week 3
+
+Apache Spark
+Key question
+
+How can we divide one large computation across hundreds or thousands of machines?
+
+Slide 16 — Module 3: Similarity & Hashing
+Module 3 — Similarity & Hashing
+
+How can we find similar objects without comparing every pair?
+
+Examples:
+
+Near-duplicate documents
+Similar images
+Similar users
+Similar products
+Recommendation systems
+
+Weeks 4–6
+
+Locality-Sensitive Hashing
+Slide 17 — Module 4: Dimensionality Reduction
+Module 4 — Dimensionality Reduction
+
+Real-world datasets can have:
+
+Thousands or millions of features
+
+How can we reduce the dimensionality while preserving important information?
+
+Weeks 7–8
+
+Dimensionality Reduction — Part 1
+Dimensionality Reduction — Part 2
+Slide 18 — Module 5: Graph Analytics
+Module 5 — Graph Analytics
+
+Many real-world datasets naturally form graphs.
+
+Examples:
+
+Social networks
+Web pages and hyperlinks
+Citation networks
+Transportation networks
+Recommendation networks
+
+Weeks 9–12
+
+Graph Analytics
+PageRank
+Recommendations & Spam
+Community Detection
+Slide 19 — Module 6: Scale, Streams & Presentations
+Module 6 — Scale, Streams & Presentations
+
+Some data is:
+
+Too large to store easily
+Arriving continuously
+Too fast to process later
+
+Week 13
+
+Large-Scale Machine Learning
+
+Week 14
+
+Mining Data Streams
+
+Week 15
+
+---
+
+Learning Outcomes
+Slide  — Course Learning Outcomes
+
+Understand and analyze big data processing frameworks.
+Understand algorithms for large-scale data mining and machine learning.
+Apply algorithms for large-scale data mining and machine learning. 
+Design, implement, and evaluate a research-oriented big-data solution.
+
+---
+Assessment & Course Policies
+Slide  — Assessments & Policies
+Assignments
+Due date and time will be specified on the assignment PDF.
+A short grace period may be allowed.
+Late submissions may not be accepted.
+Demo is required for each assignment.
+Quizzes
+5 quizzes
+2 retake quizzes
+Follow all assessment instructions carefully.
+Academic Honesty
+Academic dishonesty can result in cancellation of the assessment.
+University policies apply to quizzes, exams, assignments, and projects.
+Attendance
+University policy requires 100% attendance.
+Check your attendance when it is marked.
+For corrections, follow the university procedure and obtain the required batch-advisor verification.
+
+---
+Slide — Research Project
+Team-Based Research Project
+
+Team size: 4 students
+
+Your project should:
+
+Use a large dataset, preferably with millions of records.
+Address a meaningful real world problem.
+Cannot be the same as your FYP idea.
+Divide the problem into 4 meaningful subproblems.
+Discuss in a meeting to refine the idea.
+Research Process
+
+Problem → Subproblems → Literature Review → Baselines → Proposed Method → Experiments → Results
+
+Slide  — Research Project: Expectations
+Every Student Must Own a Subproblem
+
+For each subproblem:
+
+Identify the problem.
+Study existing approaches.
+Implement baseline methods.
+Develop/propose an improved approach.
+Run experiments.
+Compare results.
+Present findings.
+Timeline
+
+By mid-semester break
+
+Baselines should be running.
+
+Later
+
+Proposed methods + experiments + results.
+
+Research Opportunity
+
+Strong projects may be refined into:
+
+A research paper
+
+Good research experience can be valuable for graduate studies.
+
+----
+How to Succeed
+Slide — How to Succeed in DS461
+1. Listen Actively
+
+Lectures introduce the concepts you will need for assignments and projects.
+
+2. Attend Every Class
+
+Big-data concepts build on each other.
+
+Missing one concept can make later topics harder.
+
+3. Be on Time
+
+Arrive before the lecture begins.
+
+4. Practice
+Understand → Implement → Experiment → Analyze
