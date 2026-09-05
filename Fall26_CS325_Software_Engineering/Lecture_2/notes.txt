@@ -1,0 +1,105 @@
+Want to prepare lecture 2 on software engineering. Prepare html and javascript. 
+Lecture 2
+Date: September 2, 2026
+
+First there should be SDLC. 
+
+SDLC Software Development LifeCycle is a simplified representation of a software process. Add an image for this.
+
+Then start software process models: Software process models define what specific activities are included and in what order they are included.
+
+1. Waterfall model:
+
+The Waterfall Model is a linear sequential flow. In which progress is seen as flowing steadily downwards (like a waterfall) through the phases of software implementation. 
+This means that any phase in the development process begins only if the previous phase is complete. The waterfall approach does not define the process to go back to the previous phase to handle changes in requirement. The waterfall approach is the earliest approach and most widely known that was used for software development.
+Plan driven
+
+Add illustration for waterfall model
+
+Advantages	
+Easy to explain to the users.
+Stages are well defined.
+Helps to plan and schedule the project.
+Each phase has specific deliverables.
+
+Disadvantages
+Assumes that the requirements of a system can be frozen.
+Very difficult to go back to any stage after it is finished.
+A little flexibility and adjusting the scope are difficult and expensive.
+Costly and required more time, in addition to the detailed plan.
+
+
+V Shaped Model
+It is an extension of the waterfall model, Instead of moving down in a linear way, the process steps are bent upwards after the implementation and coding phase, to form the typical V shape. The major difference between the V shaped model and the waterfall model is the early test planning in the V-shaped model.
+
+
+Add an illustration for v shaped model
+
+Advantages	
+Simple and easy to use
+Each phase has specific deliverables.
+Higher chance of success over the waterfall model due to the development of test plans early on during the life cycle.
+Works well for where requirements are easily understood.
+Verification and validation of the product in the early stages of product development.
+
+Disadvantages
+Very inflexible, like the waterfall model.
+Adjusting the scope is difficult and expensive. The software is developed during the implementation phase, so no early prototypes of the software are produced. The model doesn’t provide a clear path for problems found during the testing phases.
+Costly and required more time, in addition to a detailed plan
+
+Prototyping Model
+It refers to the activity of creating prototypes of software applications, for example, incomplete versions of the software program being developed. It is an activity that can occur in software development and It used to visualize some components of the software to limit the gap of misunderstanding the customer requirements by the development team. This also will reduce the iterations that may occur in the waterfall approach and are hard to be implemented due to the inflexibility of the waterfall approach. So, when the final prototype is developed, the requirement is considered to be frozen.
+
+- Throwaway prototyping: Prototypes that are eventually discarded rather than becoming a part of the finally delivered software.
+  Add image for throwaway prototype.
+
+- Evolutionary prototyping: prototypes that evolve into the final system through an iterative incorporation of user feedback.
+  Add an image
+
+- Incremental prototyping: The final product is built as separate prototypes. In the end, the separate prototypes are merged in an overall design.
+  Add an image
+
+Advantages
+Reduced time and costs, but this can be a disadvantage if the developer loses time in developing the prototypes.
+Improved and increased user involvement.
+
+Disadvantages
+Excessive development time of the prototype.
+It is costly to implement the prototypes.
+
+
+Spiral Model:
+
+Combines iterative development with risk analysis.
+Emphasis on risk reduction at every step.
+This model is evolutionary — the system grows in increments, but with each cycle focused on evaluating and mitigating risks.
+Process is represented as a spiral rather than as a sequence of activities with backtracking. 
+Each loop in the spiral represents a phase in the process. 
+No fixed phases such as specification or design - loops in the spiral are chosen depending on what is required. 
+Risks are explicitly assessed and resolved throughout the process.
+Add image of spiral model
+
+Advantages	
+Estimates (i.e. budget, schedule, etc.) become more realistic as work progressed because important issues are discovered earlier.
+Early involvement of developers.
+Manages risks and develops the system into phases.
+
+Disadvantages
+High cost and time to reach the final product.
+Needs special skills to evaluate the risks and assumptions.
+Highly customized limiting re-usability
+
+
+Iterative and Incremental Models:
+It is developed to overcome the weaknesses of the waterfall model. It starts with initial planning and ends with deployment with the cyclic interactions in between. The basic idea behind this method is to develop a system through repeated cycles (iterative) and in smaller portions at a time (incremental), allowing software developers to take advantage of what was learned during the development of earlier parts or versions of the system. It can consist of mini waterfalls or mini V-Shaped models.
+Add image
+
+Advantages	
+Produces business value early in the development lifecycle.
+Better use of scarce resources through proper increment definition.
+Can accommodate some change requests between increments.
+More focused on customer value than the linear approaches.
+We can detect project issues and changes earlier.
+
+Disadvantages
+Integration between the iterations can be an issue if it is not considered during the development and project planning.

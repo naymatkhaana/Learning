@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Engineering - Lecture 2</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f4c81, #2563a6);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+        }
+
+        header p {
+            margin: 5px 0;
+            font-size: 17px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #0f4c81;
+            border-bottom: 3px solid #dbeafe;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2563a6;
+            margin-top: 25px;
+        }
+
+        .definition {
+            background: #eff6ff;
+            border-left: 5px solid #2563a6;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .important {
+            background: #fff7ed;
+            border-left: 5px solid #f97316;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .exam {
+            background: #ecfdf5;
+            border-left: 5px solid #10b981;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .image-placeholder {
+            height: 280px;
+            border: 3px dashed #94a3b8;
+            background: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 18px;
+        }
+
+        .image-placeholder span {
+            max-width: 80%;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .flow-box {
+            background: #2563a6;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 25px;
+            color: #64748b;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .advantage, .disadvantage {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .advantage {
+            background: #ecfdf5;
+            border-top: 4px solid #10b981;
+        }
+
+        .disadvantage {
+            background: #fef2f2;
+            border-top: 4px solid #ef4444;
+        }
+
+        .advantage h3 {
+            color: #047857;
+        }
+
+        .disadvantage h3 {
+            color: #b91c1c;
+        }
+
+        ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .model-tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #0f4c81;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #0f4c81;
+            color: white;
+            margin-top: 30px;
+        }
+
+        button {
+            background: #2563a6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4f85;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 750px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+
+            section {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            section {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Software Engineering</h1>
+    <p><strong>Lecture 2</strong></p>
+    <p>September 2, 2026</p>
+</header>
+
+<div class="container">
+
+    <!-- SDLC -->
+    <section>
+        <span class="model-tag">Introduction</span>
+        <h2>Software Development Life Cycle (SDLC)</h2>
+
+        <div class="definition">
+            <strong>SDLC (Software Development Life Cycle)</strong> is a simplified
+            representation of a software process.
+        </div>
+
+        <h3>Typical SDLC Activities</h3>
+
+        <div class="flow">
+            <div class="flow-box">Requirements</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Design</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Implementation</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Testing</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Deployment</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Maintenance</div>
+        </div>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert SDLC diagram here
+            </span>
+        </div>
+    </section>
+
+
+    <!-- SOFTWARE PROCESS MODELS -->
+    <section>
+        <h2>Software Process Models</h2>
+
+        <div class="definition">
+            <strong>Software process models</strong> define what specific activities
+            are included in a software process and in what order they are included.
+        </div>
+
+        <p>
+            Different software projects may require different process models
+            depending on requirements, risks, customer involvement, testing needs,
+            and the nature of the project.
+        </p>
+    </section>
+
+
+    <!-- WATERFALL -->
+    <section>
+        <span class="model-tag">Model 1</span>
+        <h2>1. Waterfall Model</h2>
+
+        <p>
+            The <strong>Waterfall Model</strong> is a linear sequential flow,
+            in which progress is seen as flowing steadily downwards
+            (like a waterfall) through the phases of software implementation.
+        </p>
+
+        <p>
+            This means that any phase in the development process begins only
+            if the previous phase is complete.
+        </p>
+
+        <p>
+            The waterfall approach does not define the process to go back to
+            the previous phase to handle changes in requirements.
+        </p>
+
+        <p>
+            The waterfall approach is the earliest approach and one of the
+            most widely known approaches used for software development.
+        </p>
+
+        <div class="important">
+            <strong>Type:</strong> Plan-driven model
+        </div>
+
+        <div class="flow">
+            <div class="flow-box">Requirements</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Design</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Implementation</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Testing</div>
+            <div class="arrow">↓</div>
+            <div class="flow-box">Deployment</div>
+        </div>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Waterfall Model illustration here
+            </span>
+        </div>
+
+        <div class="two-column">
+            <div class="advantage">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>Easy to explain to the users.</li>
+                    <li>Stages are well defined.</li>
+                    <li>Helps to plan and schedule the project.</li>
+                    <li>Each phase has specific deliverables.</li>
+                </ul>
+            </div>
+
+            <div class="disadvantage">
+                <h3>Disadvantages</h3>
+                <ul>
+                    <li>Assumes that the requirements of a system can be frozen.</li>
+                    <li>Very difficult to go back to any stage after it is finished.</li>
+                    <li>
+                        Little flexibility; adjusting the scope is difficult
+                        and expensive.
+                    </li>
+                    <li>
+                        Costly and requires more time because of the detailed plan.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- V MODEL -->
+    <section>
+        <span class="model-tag">Model 2</span>
+        <h2>2. V-Shaped Model</h2>
+
+        <p>
+            The <strong>V-Shaped Model</strong> is an extension of the
+            Waterfall Model.
+        </p>
+
+        <p>
+            Instead of moving down in a linear way, the process steps are
+            bent upwards after the implementation and coding phase, forming
+            the typical <strong>V shape</strong>.
+        </p>
+
+        <div class="important">
+            <strong>Major difference from Waterfall:</strong>
+            Early test planning in the V-shaped model.
+        </div>
+
+        <div class="flow">
+            <div class="flow-box">Requirements</div>
+            <div class="arrow">↘</div>
+            <div class="flow-box">System Design</div>
+            <div class="arrow">↘</div>
+            <div class="flow-box">Architecture</div>
+            <div class="arrow">↘</div>
+            <div class="flow-box">Detailed Design</div>
+            <div class="arrow">↘</div>
+            <div class="flow-box">Implementation</div>
+        </div>
+
+        <div class="flow">
+            <div class="flow-box">Acceptance Testing</div>
+            <div class="arrow">←</div>
+            <div class="flow-box">System Testing</div>
+            <div class="arrow">←</div>
+            <div class="flow-box">Integration Testing</div>
+            <div class="arrow">←</div>
+            <div class="flow-box">Unit Testing</div>
+        </div>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert V-Shaped Model illustration here
+            </span>
+        </div>
+
+        <div class="two-column">
+            <div class="advantage">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>Simple and easy to use.</li>
+                    <li>Each phase has specific deliverables.</li>
+                    <li>
+                        Higher chance of success over the Waterfall Model
+                        due to early development of test plans.
+                    </li>
+                    <li>Works well where requirements are easily understood.</li>
+                    <li>
+                        Verification and validation of the product are considered
+                        in the early stages of product development.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="disadvantage">
+                <h3>Disadvantages</h3>
+                <ul>
+                    <li>Very inflexible, like the Waterfall Model.</li>
+                    <li>Adjusting the scope is difficult and expensive.</li>
+                    <li>
+                        The software is developed during the implementation phase,
+                        so no early prototypes of the software are produced.
+                    </li>
+                    <li>
+                        The model does not provide a clear path for problems
+                        found during the testing phases.
+                    </li>
+                    <li>Costly and requires more time and a detailed plan.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- PROTOTYPING -->
+    <section>
+        <span class="model-tag">Model 3</span>
+        <h2>3. Prototyping Model</h2>
+
+        <p>
+            The <strong>Prototyping Model</strong> refers to the activity of
+            creating prototypes of software applications, for example,
+            incomplete versions of the software program being developed.
+        </p>
+
+        <p>
+            A prototype is used to visualize some components of the software
+            and to limit the gap of misunderstanding customer requirements
+            by the development team.
+        </p>
+
+        <p>
+            This can reduce the iterations that may occur in the Waterfall
+            approach and that are difficult to implement because of its
+            inflexibility.
+        </p>
+
+        <div class="important">
+            When the final requirements have been agreed upon, the requirements
+            are considered <strong>frozen</strong> before final development.
+        </div>
+
+
+        <h3>3.1 Throwaway Prototyping</h3>
+
+        <p>
+            Prototypes that are eventually <strong>discarded</strong> rather
+            than becoming part of the finally delivered software.
+        </p>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Throwaway Prototyping illustration here
+            </span>
+        </div>
+
+
+        <h3>3.2 Evolutionary Prototyping</h3>
+
+        <p>
+            Prototypes that evolve into the final system through an
+            <strong>iterative incorporation of user feedback</strong>.
+        </p>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Evolutionary Prototyping illustration here
+            </span>
+        </div>
+
+
+        <h3>3.3 Incremental Prototyping</h3>
+
+        <p>
+            The final product is built as separate prototypes.
+            In the end, the separate prototypes are merged into an overall design.
+        </p>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Incremental Prototyping illustration here
+            </span>
+        </div>
+
+
+        <div class="two-column">
+            <div class="advantage">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>Reduced development time and costs.</li>
+                    <li>Improved and increased user involvement.</li>
+                    <li>
+                        Helps clarify requirements before final development.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="disadvantage">
+                <h3>Disadvantages</h3>
+                <ul>
+                    <li>
+                        Excessive development time may be spent developing
+                        the prototype.
+                    </li>
+                    <li>It can be costly to implement prototypes.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SPIRAL -->
+    <section>
+        <span class="model-tag">Model 4</span>
+        <h2>4. Spiral Model</h2>
+
+        <p>
+            The <strong>Spiral Model</strong> combines iterative development
+            with <strong>risk analysis</strong>.
+        </p>
+
+        <div class="important">
+            <strong>Key idea:</strong> Emphasis on risk reduction at every step.
+        </div>
+
+        <p>
+            This model is evolutionary. The system grows in increments,
+            but each cycle focuses on evaluating and mitigating risks.
+        </p>
+
+        <p>
+            The process is represented as a spiral rather than as a sequence
+            of activities with backtracking.
+        </p>
+
+        <p>
+            Each loop in the spiral represents a phase or cycle in the process.
+        </p>
+
+        <p>
+            There are no fixed phases such as specification or design.
+            The activities in each loop are chosen depending on what is required.
+        </p>
+
+        <p>
+            Risks are explicitly assessed and resolved throughout the process.
+        </p>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Spiral Model illustration here
+            </span>
+        </div>
+
+        <h3>Typical Spiral Cycle</h3>
+
+        <div class="flow">
+            <div class="flow-box">Planning</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Risk Analysis</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Development</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Evaluation</div>
+            <div class="arrow">↻</div>
+        </div>
+
+        <div class="two-column">
+            <div class="advantage">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>
+                        Estimates such as budget and schedule become more
+                        realistic as work progresses because important issues
+                        are discovered earlier.
+                    </li>
+                    <li>Early involvement of developers.</li>
+                    <li>Manages risks and develops the system into phases.</li>
+                </ul>
+            </div>
+
+            <div class="disadvantage">
+                <h3>Disadvantages</h3>
+                <ul>
+                    <li>High cost and time to reach the final product.</li>
+                    <li>
+                        Needs special skills to evaluate risks and assumptions.
+                    </li>
+                    <li>Highly customized, limiting reusability.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ITERATIVE AND INCREMENTAL -->
+    <section>
+        <span class="model-tag">Model 5</span>
+        <h2>5. Iterative and Incremental Model</h2>
+
+        <p>
+            The <strong>Iterative and Incremental Model</strong> was developed
+            to overcome some of the weaknesses of the Waterfall Model.
+        </p>
+
+        <p>
+            It starts with initial planning and ends with deployment, with
+            cyclic interactions in between.
+        </p>
+
+        <p>
+            The basic idea is to develop a system through
+            <strong>repeated cycles (iterative)</strong> and in
+            <strong>smaller portions at a time (incremental)</strong>.
+        </p>
+
+        <p>
+            This allows software developers to take advantage of what was
+            learned during the development of earlier parts or versions
+            of the system.
+        </p>
+
+        <p>
+            It can consist of <strong>mini-Waterfalls</strong> or
+            <strong>mini V-Shaped models</strong>.
+        </p>
+
+        <div class="image-placeholder">
+            <span>
+                <strong>IMAGE PLACEHOLDER</strong><br>
+                Insert Iterative and Incremental Model illustration here
+            </span>
+        </div>
+
+        <h3>Example</h3>
+
+        <div class="flow">
+            <div class="flow-box">Increment 1<br>Login</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Increment 2<br>Shopping Cart</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Increment 3<br>Payment</div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Increment 4<br>Order Tracking</div>
+        </div>
+
+        <div class="exam">
+            <strong>Remember:</strong><br>
+            Incremental = adding functionality piece by piece.<br>
+            Iterative = repeatedly improving/refining the system.
+        </div>
+
+        <div class="two-column">
+            <div class="advantage">
+                <h3>Advantages</h3>
+                <ul>
+                    <li>
+                        Produces business value early in the development lifecycle.
+                    </li>
+                    <li>
+                        Better use of scarce resources through proper
+                        increment definition.
+                    </li>
+                    <li>
+                        Can accommodate some change requests between increments.
+                    </li>
+                    <li>
+                        More focused on customer value than linear approaches.
+                    </li>
+                    <li>
+                        Project issues and changes can be detected earlier.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="disadvantage">
+                <h3>Disadvantages</h3>
+                <ul>
+                    <li>
+                        Integration between iterations can be an issue if it is
+                        not considered during development and project planning.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- COMPARISON -->
+    <section>
+        <h2>Quick Comparison of Process Models</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Main Idea</th>
+                    <th>Best When</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><strong>Waterfall</strong></td>
+                    <td>Linear sequential development</td>
+                    <td>Requirements are stable and well understood</td>
+                </tr>
+
+                <tr>
+                    <td><strong>V-Model</strong></td>
+                    <td>Development phases matched with testing phases</td>
+                    <td>Verification and validation are very important</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Prototyping</strong></td>
+                    <td>Build prototypes to understand requirements</td>
+                    <td>Requirements are unclear or difficult to understand</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Spiral</strong></td>
+                    <td>Iterative development with explicit risk analysis</td>
+                    <td>Projects have significant risks</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Iterative & Incremental</strong></td>
+                    <td>Develop and refine the system in small cycles</td>
+                    <td>Early delivery, feedback, and gradual development are needed</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- MEMORY SECTION -->
+    <section>
+        <h2>Exam Memory Guide</h2>
+
+        <div class="exam">
+            <ul>
+                <li><strong>Waterfall →</strong> Fixed/stable requirements</li>
+                <li><strong>V-Model →</strong> Testing and validation</li>
+                <li><strong>Prototyping →</strong> Unclear requirements</li>
+                <li><strong>Spiral →</strong> Risk analysis</li>
+                <li><strong>Incremental →</strong> Add functionality in pieces</li>
+                <li><strong>Iterative →</strong> Refine and improve repeatedly</li>
+            </ul>
+        </div>
+
+        <button onclick="window.print()">Print / Save as PDF</button>
+    </section>
+
+</div>
+
+<footer>
+    Software Engineering — Lecture 2 | September 2, 2026
+</footer>
+
+
+<script>
+    // Simple JavaScript for highlighting important concepts
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const modelTags = document.querySelectorAll(".model-tag");
+
+        modelTags.forEach(tag => {
+            tag.addEventListener("click", function () {
+                this.style.backgroundColor =
+                    this.style.backgroundColor === "rgb(254, 215, 170)"
+                        ? "#dbeafe"
+                        : "#fed7aa";
+            });
+        });
+
+        console.log("Software Engineering Lecture 2 loaded successfully.");
+    });
+</script>
+
+</body>
+</html>
