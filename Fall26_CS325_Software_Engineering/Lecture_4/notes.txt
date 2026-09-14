@@ -1,0 +1,50 @@
+Want to give lecture on Extreme Programming. Write code for html and javascript webpage for it. It should be very modern, stylish and high end. It should use any theme other than blue. 
+
+Extreme Programming: This approach was developed by pushing recognized good practice, such as iterative development, to
+“extreme” levels. For example, in XP, several new versions of a system may be developed by different programmers, integrated, and tested in a day. 
+
+Most Important Xtreme programming practices:
+1) User stories:  user story is a scenario of use that might be experienced by a system user. Customer works closely with a developer. Together, they develop a “story card” that briefly describes a story that encapsulates the customer needs. stories are broken into tasks .... give example
+2) Refactoring  .... give example
+3) Test driven development or test first development:  Instead of writing code
+and then writing tests for that code, you write the tests before you write the code. This means that you can run the test as the code is being written and discover problems during development.  .... give example
+4) Pair Programming:  ... give example 
+- It supports the idea of collective ownership and responsibility for the system.
+- It acts as an informal review process because each line of code is looked at by at least
+two people.
+- It encourages refactoring to improve the software structure. 
+
+More principles and practices in XP:
+
+Principle or practice Description
+Collective ownership: The pairs of developers work on all areas of the system, so that no islands of
+expertise develop and all the developers take responsibility for all of the code.
+Anyone can change anything.
+Continuous
+integration:
+As soon as the work on a task is complete, it is integrated into the whole
+system. After any such integration, all the unit tests in the system must pass.
+Incremental planning: Requirements are recorded on “story cards,” and the stories to be included in
+a release are determined by the time available and their relative priority. The
+developers break these stories into development “tasks.” See Figures 3.5
+and 3.6.
+On-site customer: A representative of the end-user of the system (the Customer) should be
+available full time for the use of the XP team. In an extreme programming
+process, the customer is a member of the development team and is
+responsible for bringing system requirements to the team for implementation.
+Pair programming: Developers work in pairs, checking each other's work and providing the
+support to always do a good job.
+Refactoring: All developers are expected to refactor the code continuously as soon as
+potential code improvements are found. This keeps the code simple and
+maintainable.
+Simple design: Enough design is carried out to meet the current requirements and no more.
+Small releases: The minimal useful set of functionality that provides business value is
+developed first. Releases of the system are frequent and incrementally add
+functionality to the first release.
+Sustainable pace: Large amounts of overtime are not considered acceptable, as the net effect is
+often to reduce code quality and medium-term productivity.
+Test first
+development:
+An automated unit test framework is used to write tests for a new piece of
+functionality before that functionality itself is implemented.
+

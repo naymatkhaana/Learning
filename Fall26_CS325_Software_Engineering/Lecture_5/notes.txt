@@ -1,0 +1,68 @@
+Want to design tutorial on Kanban. Write javascript and html webpage. It should be very modern, stylish and high end. Write MCQs at the end.
+
+**Kanban**
+We have studied Extreme programming. It is agile methodology. 
+
+Extreme Programming (XP) focuses heavily on how software is developed. e.g. Pair programming, Refactoring, Test first development ...
+
+Scrum and Kanban take a different approach.
+Scrum and Kanban focus more on how the work is organized and managed. 
+
+All three are agile methods. 
+The goal of XP, Scrum, and Kanban is to help a team deliver valuable, working software quickly and continuously, while responding to changing customer needs.
+
+XP focuses more on engineering practices.
+Scrum on iterative project management.
+Kanban on continuous work.
+
+Kanban:
+Kanban is an Agile project management method that uses *visual boards* to help teams track work through stages of completion. 
+Kanban "pulls" work items from a product backlog into a steady, manageable *flow*.
+
+Kanban board example with Backlog, To do, In progress, Completed.
+
+Core components of Kanban board
+
+1. Kanban board
+A Kanban board is the surface your team uses to track work. It can be a physical whiteboard with sticky notes or a digital board in a work management tool. The board gives your team a shared view of active tasks, upcoming work, blocked items, and completed work.
+
+2. Kanban cards
+Kanban cards represent individual tasks or work items. Each card should include the details a teammate needs to take action, such as the task title, owner, due date, priority, description, and supporting files.
+
+3. Columns
+Columns represent the stages work moves through. A simple board might include columns for “To do,” “In progress,” and “Done,” while more detailed workflows may add stages for review, approval, testing, or launch.
+
+4. Swimlanes
+Swimlanes are horizontal sections that separate work on the same board. Teams can use swimlanes to group tasks by priority, work type, team, project, or customer request.
+
+5. Work In Progress WIP limits
+WIP limits the number of tasks that can be in a single stage at a time. Limiting work helps teams avoid taking on too much at once, reduce multitasking, and focus on finishing active tasks before starting new ones.
+
+Measuring work:
+
+Lead time: The total elapsed time from the moment a request is made by a customer until it is fully delivered.
+
+Cycle time: The active time it takes to complete a work item once work has actually started.
+
+Throughput: The number of work items completed by the team over a specific time period (such as per day, week, or month).
+
+Kanban boards: Pros and cons
+
+Benefits
+
+Provides at a glance insight into your team's work and workflows
+Increases clarity for remote teams by centralizing work visibility
+Encourages flexibility through continuous improvement practices
+Improves efficiency and reduces waste in project workflows
+
+Disadvantages
+
+Less common among non-engineering teams, which may slow adoption
+Can become overwhelming if too many tasks are in flight at once
+Requires discipline to maintain WIP limits and board hygiene
+May not suit teams that need fixed deadlines or structured sprints
+
+
+References: https://asana.com/resources/what-is-kanban
+
+

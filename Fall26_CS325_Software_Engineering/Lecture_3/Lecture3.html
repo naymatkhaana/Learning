@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agile Development | Software Engineering</title>
+
+<style>
+/* =========================================================
+   GLOBAL
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --bg: #07111f;
+    --bg2: #0b1729;
+    --card: rgba(255,255,255,0.055);
+    --card-border: rgba(255,255,255,0.10);
+    --text: #f4f7fb;
+    --muted: #9aaac0;
+
+    --cyan: #42d9ff;
+    --blue: #5d7cff;
+    --purple: #9b6cff;
+    --green: #4ee6a5;
+    --orange: #ffb454;
+    --red: #ff6b81;
+
+    --shadow: 0 25px 70px rgba(0,0,0,.35);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(66,217,255,.12), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(155,108,255,.12), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+    color: var(--text);
+}
+
+/* Background decoration */
+body::before {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(66,217,255,.05);
+    filter: blur(100px);
+    top: -250px;
+    left: -200px;
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(155,108,255,.05);
+    filter: blur(100px);
+    bottom: -250px;
+    right: -200px;
+    pointer-events: none;
+}
+
+/* =========================================================
+   PRESENTATION
+========================================================= */
+
+.presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    padding: 75px 9vw 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    opacity: 0;
+    transform: translateX(40px) scale(.98);
+    pointer-events: none;
+
+    transition:
+        opacity .45s ease,
+        transform .55s cubic-bezier(.2,.8,.2,1);
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+}
+
+.slide.exit-left {
+    transform: translateX(-40px) scale(.98);
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+.kicker {
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+h1, h2, h3 {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+h1 {
+    font-size: clamp(52px, 7vw, 105px);
+    line-height: .95;
+    letter-spacing: -4px;
+}
+
+h2 {
+    font-size: clamp(36px, 4vw, 62px);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: clamp(17px, 2vw, 23px);
+    line-height: 1.7;
+    max-width: 900px;
+}
+
+.gradient {
+    background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.highlight {
+    color: var(--cyan);
+    font-weight: 800;
+}
+
+.green {
+    color: var(--green);
+}
+
+.orange {
+    color: var(--orange);
+}
+
+.purple {
+    color: var(--purple);
+}
+
+/* =========================================================
+   GLASS CARDS
+========================================================= */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+}
+
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    margin-bottom: 18px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(66,217,255,.18),
+        rgba(93,124,255,.15)
+    );
+
+    border: 1px solid rgba(66,217,255,.2);
+}
+
+.card p {
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    align-items: flex-start;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(66,217,255,.25);
+    background: rgba(66,217,255,.08);
+    color: var(--cyan);
+    padding: 10px 17px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+.hero .subtitle {
+    margin-top: 28px;
+}
+
+.hero-flow {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.flow-item {
+    padding: 13px 18px;
+    border-radius: 100px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    font-weight: 700;
+}
+
+.arrow {
+    color: var(--cyan);
+    font-size: 20px;
+}
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
+.quote {
+    border-left: 3px solid var(--cyan);
+    padding: 20px 25px;
+    background: rgba(66,217,255,.05);
+    border-radius: 0 16px 16px 0;
+    font-size: 22px;
+    line-height: 1.5;
+    margin: 20px 0;
+}
+
+/* =========================================================
+   WHY AGILE
+========================================================= */
+
+.reason {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.reason-number {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg,var(--blue),var(--purple));
+    font-weight: 800;
+}
+
+/* =========================================================
+   MANIFESTO
+========================================================= */
+
+.manifesto {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 18px;
+}
+
+.manifesto-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 155px;
+}
+
+.manifesto-card::after {
+    content: "AGILE";
+    position: absolute;
+    right: -10px;
+    bottom: -22px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(255,255,255,.025);
+}
+
+.manifesto-card h3 {
+    color: var(--cyan);
+}
+
+.over {
+    color: #fff;
+    font-weight: 800;
+}
+
+.under {
+    color: var(--muted);
+}
+
+/* =========================================================
+   PRINCIPLES
+========================================================= */
+
+.principle-layout {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.principle-number {
+    font-family: 'Space Grotesk';
+    font-size: 90px;
+    font-weight: 800;
+    line-height: .8;
+
+    background: linear-gradient(135deg,var(--cyan),var(--purple));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.principle-card {
+    max-width: 1000px;
+}
+
+.principle-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.principle-card h3 {
+    font-size: clamp(25px, 3vw, 40px);
+    line-height: 1.25;
+}
+
+.principle-card p {
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.7;
+    margin-top: 15px;
+}
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+
+.activity {
+    position: relative;
+}
+
+.activity::before {
+    content: "GROUP ACTIVITY";
+    position: absolute;
+    right: 5vw;
+    top: 5vh;
+    font-size: 70px;
+    font-weight: 900;
+    color: rgba(255,255,255,.025);
+}
+
+.activity-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.activity-step {
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.activity-step span {
+    display: block;
+    color: var(--cyan);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.activity-step p {
+    color: #dbe4ef;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+    background: rgba(255,255,255,.03);
+}
+
+th, td {
+    padding: 16px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+th {
+    color: white;
+    background: rgba(93,124,255,.14);
+    font-weight: 800;
+}
+
+td {
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+td:first-child {
+    color: #fff;
+    font-weight: 700;
+}
+
+.agile-column {
+    color: var(--green) !important;
+}
+
+.plan-column {
+    color: var(--orange) !important;
+}
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.final {
+    align-items: center;
+    text-align: center;
+}
+
+.final h2 {
+    font-size: clamp(45px,6vw,85px);
+}
+
+.final-line {
+    margin-top: 35px;
+    font-size: 24px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.logo {
+    font-family: 'Space Grotesk';
+    font-weight: 800;
+    font-size: 17px;
+    pointer-events: auto;
+}
+
+.logo span {
+    color: var(--cyan);
+}
+
+.counter {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.progress {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg,var(--cyan),var(--purple));
+    width: 0%;
+    z-index: 100;
+    transition: width .4s ease;
+}
+
+.controls {
+    position: fixed;
+    bottom: 25px;
+    right: 30px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+}
+
+button {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: .2s;
+    backdrop-filter: blur(15px);
+}
+
+button:hover {
+    background: rgba(66,217,255,.15);
+    border-color: rgba(66,217,255,.3);
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+.slide.active .animate {
+    animation: reveal .7s both;
+}
+
+.slide.active .delay-1 {
+    animation-delay: .1s;
+}
+
+.slide.active .delay-2 {
+    animation-delay: .2s;
+}
+
+.slide.active .delay-3 {
+    animation-delay: .3s;
+}
+
+.slide.active .delay-4 {
+    animation-delay: .4s;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .slide {
+        padding: 70px 6vw 90px;
+        overflow-y: auto;
+        justify-content: flex-start;
+    }
+
+    h1 {
+        font-size: 52px;
+    }
+
+    h2 {
+        font-size: 40px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .manifesto,
+    .activity-box {
+        grid-template-columns: 1fr;
+    }
+
+    .principle-layout {
+        grid-template-columns: 60px 1fr;
+        gap: 18px;
+    }
+
+    .principle-number {
+        font-size: 55px;
+    }
+
+    .activity::before {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   12 AGILE PRINCIPLES — PREMIUM CARDS
+========================================================= */
+
+.principles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 5px;
+}
+
+.principle-card-mini {
+    position: relative;
+
+    min-height: 145px;
+    padding: 17px;
+
+    border-radius: 19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.025)
+        );
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.05);
+
+    overflow: hidden;
+
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        background .3s ease,
+        box-shadow .3s ease;
+}
+
+
+/* Glow behind every card */
+
+.principle-card-mini::before {
+    content: "";
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    top: -55px;
+    right: -40px;
+
+    border-radius: 50%;
+
+    background: var(--cyan);
+
+    opacity: .06;
+
+    filter: blur(25px);
+
+    transition: .3s;
+}
+
+
+.principle-card-mini:hover {
+    transform: translateY(-6px);
+
+    border-color: rgba(66,217,255,.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(66,217,255,.11),
+            rgba(155,108,255,.055)
+        );
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.30),
+        0 0 25px rgba(66,217,255,.08);
+}
+
+
+.principle-card-mini:hover::before {
+    opacity: .15;
+}
+
+
+/* Top row */
+
+.principle-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+}
+
+
+/* Icon */
+
+.principle-icon-mini {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(66,217,255,.15),
+            rgba(93,124,255,.15)
+        );
+
+    border: 1px solid rgba(66,217,255,.18);
+
+    box-shadow:
+        0 5px 20px rgba(66,217,255,.06);
+}
+
+
+/* Number */
+
+.principle-top > span {
+    color: var(--cyan);
+
+    font-family: 'Space Grotesk', sans-serif;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    opacity: .8;
+}
+
+
+/* Card heading */
+
+.principle-card-mini h3 {
+    font-family: 'Space Grotesk', sans-serif;
+
+    font-size: 15px;
+
+    line-height: 1.2;
+
+    margin-bottom: 7px;
+
+    color: #ffffff;
+}
+
+
+/* Card description */
+
+.principle-card-mini p {
+    color: #98a9be;
+
+    font-size: 11.5px;
+
+    line-height: 1.45;
+}
+
+
+/* Highlighted words */
+
+.principle-card-mini strong {
+    color: #eafaff;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INDIVIDUAL CARD COLORS
+========================================================= */
+
+.principle-card-mini:nth-child(1) .principle-icon-mini {
+    background: rgba(66,217,255,.12);
+}
+
+.principle-card-mini:nth-child(2) .principle-icon-mini {
+    background: rgba(155,108,255,.12);
+}
+
+.principle-card-mini:nth-child(3) .principle-icon-mini {
+    background: rgba(78,230,165,.12);
+}
+
+.principle-card-mini:nth-child(4) .principle-icon-mini {
+    background: rgba(255,180,84,.12);
+}
+
+.principle-card-mini:nth-child(5) .principle-icon-mini {
+    background: rgba(255,107,129,.12);
+}
+
+.principle-card-mini:nth-child(6) .principle-icon-mini {
+    background: rgba(93,124,255,.12);
+}
+
+.principle-card-mini:nth-child(7) .principle-icon-mini {
+    background: rgba(66,217,255,.12);
+}
+
+.principle-card-mini:nth-child(8) .principle-icon-mini {
+    background: rgba(78,230,165,.12);
+}
+
+.principle-card-mini:nth-child(9) .principle-icon-mini {
+    background: rgba(255,180,84,.12);
+}
+
+.principle-card-mini:nth-child(10) .principle-icon-mini {
+    background: rgba(155,108,255,.12);
+}
+
+.principle-card-mini:nth-child(11) .principle-icon-mini {
+    background: rgba(93,124,255,.12);
+}
+
+.principle-card-mini:nth-child(12) .principle-icon-mini {
+    background: rgba(66,217,255,.12);
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+.slide.active .principle-card-mini {
+    animation: principleReveal .6s both;
+}
+
+.slide.active .principle-card-mini:nth-child(1)  { animation-delay: .03s; }
+.slide.active .principle-card-mini:nth-child(2)  { animation-delay: .06s; }
+.slide.active .principle-card-mini:nth-child(3)  { animation-delay: .09s; }
+.slide.active .principle-card-mini:nth-child(4)  { animation-delay: .12s; }
+.slide.active .principle-card-mini:nth-child(5)  { animation-delay: .15s; }
+.slide.active .principle-card-mini:nth-child(6)  { animation-delay: .18s; }
+.slide.active .principle-card-mini:nth-child(7)  { animation-delay: .21s; }
+.slide.active .principle-card-mini:nth-child(8)  { animation-delay: .24s; }
+.slide.active .principle-card-mini:nth-child(9)  { animation-delay: .27s; }
+.slide.active .principle-card-mini:nth-child(10) { animation-delay: .30s; }
+.slide.active .principle-card-mini:nth-child(11) { animation-delay: .33s; }
+.slide.active .principle-card-mini:nth-child(12) { animation-delay: .36s; }
+
+
+@keyframes principleReveal {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .principles-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .principles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .principles-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="presentation">
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+    <div class="topbar">
+        <div class="logo">SOFTWARE <span>ENGINEERING</span></div>
+        <div class="counter" id="counter">01 / 22</div>
+    </div>
+
+    <!-- =====================================================
+         SLIDE 1
+    ====================================================== -->
+    <section class="slide active hero">
+
+        <div class="hero-badge animate">
+            ⚡ SOFTWARE ENGINEERING • LECTURE
+        </div>
+
+        <h1 class="animate delay-1">
+            Agile<br>
+            <span class="gradient">Development</span>
+        </h1>
+
+        <p class="subtitle animate delay-2">
+            Building software in <span class="highlight">small steps</span>,
+            learning continuously, and adapting to change.
+        </p>
+
+        <div class="hero-flow animate delay-3">
+            <div class="flow-item">Build</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Feedback</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Adapt</div>
+            <div class="arrow">→</div>
+            <div class="flow-item">Improve</div>
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 2
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">01 • Foundation</div>
+
+        <h2>What is <span class="gradient">Agile?</span></h2>
+
+        <div class="card animate">
+
+            <div class="icon">⚙️</div>
+
+            <p style="font-size:22px; color:#dbe4ef;">
+                Agile development is a software development approach where
+                software is developed <span class="highlight">incrementally
+                and iteratively</span>, with continuous
+                <span class="highlight">customer feedback</span>,
+                collaboration, and adaptation to
+                <span class="highlight">changing requirements</span>.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 3
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">02 • Two Mindsets</div>
+
+        <h2>Plan-Driven <span class="muted">vs</span> Agile</h2>
+
+        <div class="grid grid-2">
+
+            <div class="card">
+                <div class="icon">📋</div>
+
+                <h3 class="orange">Plan-Driven</h3>
+
+                <div class="quote">
+                    “Plan first, then build according to the plan.”
+                </div>
+
+                <p>
+                    The project is planned in detail before development
+                    begins. Changes are generally harder to accommodate.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔄</div>
+
+                <h3 class="green">Agile</h3>
+
+                <div class="quote">
+                    “Build in small steps, get feedback, and adapt the plan.”
+                </div>
+
+                <p>
+                    The team develops incrementally, receives feedback,
+                    and continuously adjusts priorities.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 4
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">03 • Why Agile?</div>
+
+        <h2>Why do we need <span class="gradient">Agile?</span></h2>
+
+        <div class="grid grid-2">
+
+            <div class="card reason">
+                <div class="reason-number">1</div>
+                <div>
+                    <h3>Business & Technology Change</h3>
+                    <p>
+                        Customer expectations, competitors, and technologies
+                        can change rapidly.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card reason">
+                <div class="reason-number">2</div>
+                <div>
+                    <h3>Late Feedback</h3>
+                    <p>
+                        Traditional projects may deliver working software
+                        only after long development cycles.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card reason">
+                <div class="reason-number">3</div>
+                <div>
+                    <h3>Long Delivery = High Risk</h3>
+                    <p>
+                        The longer we wait to deliver, the greater the risk
+                        of building the wrong product.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card reason">
+                <div class="reason-number">4</div>
+                <div>
+                    <h3>Agile Embraces Change</h3>
+                    <p>
+                        Agile delivers <span class="green">value early</span>
+                        and uses feedback to guide future development.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 5
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">04 • The Agile Manifesto</div>
+
+        <h2>The <span class="gradient">Agile Manifesto</span></h2>
+
+        <div class="card">
+
+            <div class="icon">📜</div>
+
+            <p style="font-size:19px; color:#dbe4ef;">
+
+                In <span class="highlight">2001</span>, Kent Beck and
+                16 other software developers created and signed the
+                <span class="highlight">Manifesto for Agile Software Development</span>,
+                commonly associated with the
+                <span class="highlight">Agile Alliance</span>.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 6
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">05 • Four Values</div>
+
+        <h2>The Four <span class="gradient">Agile Values</span></h2>
+
+        <div class="manifesto">
+
+            <div class="card">
+                <h3>👥 Individuals & Interactions</h3>
+                <p>
+                    <span class="over">over</span>
+                    <span class="under">processes and tools</span>
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>💻 Working Software</h3>
+                <p>
+                    <span class="over">over</span>
+                    <span class="under">comprehensive documentation</span>
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Customer Collaboration</h3>
+                <p>
+                    <span class="over">over</span>
+                    <span class="under">contract negotiation</span>
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Responding to Change</h3>
+                <p>
+                    <span class="over">over</span>
+                    <span class="under">following a plan</span>
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SLIDE 7
+    ====================================================== -->
+    <section class="slide">
+
+        <div class="kicker">06 • Important Clarification</div>
+
+        <h2>What does <span class="gradient">"over"</span> mean?</h2>
+
+        <div class="card">
+
+            <div class="icon">⚖️</div>
+
+            <p style="font-size:24px; line-height:1.7; color:#dbe4ef;">
+
+                “While there is value in the items on the right,
+                <span class="highlight">
+                we value the items on the left more.
+                </span>”
+
+            </p>
+
+            <div class="quote">
+                Agile does NOT mean “ignore documentation,
+                contracts, plans, or processes.”
+                <br><br>
+                It means that when there is a conflict,
+                <span class="green">people, working software,
+                collaboration, and adaptability</span>
+                are given greater priority.
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+
+    <!-- =====================================================
+         SLIDE 8
+    ====================================================== -->
+    <!-- <section class="slide">
+
+        <div class="kicker">07 • Agile Principles</div>
+
+        <h2>12 Agile <span class="gradient">Principles</span></h2>
+
+        <p class="subtitle">
+            The principles explain how the Agile mindset is applied
+            in real software development.
+        </p>
+
+        <div class="grid grid-3" style="margin-top:30px;">
+
+            <div class="card">
+                <div class="icon">🌟</div>
+                <h3>Customer Value</h3>
+                <p>Deliver valuable software early and continuously.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔄</div>
+                <h3>Embrace Change</h3>
+                <p>Welcome changing requirements.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon">🚀</div>
+                <h3>Frequent Delivery</h3>
+                <p>Deliver working software frequently.</p>
+            </div>
+
+        </div>
+
+    </section> -->
+<!-- =====================================================
+     SLIDE — ALL 12 AGILE PRINCIPLES
+====================================================== -->
+
+<section class="slide">
+
+    <div class="kicker">07 • Agile Principles</div>
+
+    <h2>
+        The <span class="gradient">12 Agile Principles</span>
+    </h2>
+
+    <div class="principles-grid">
+
+        <!-- 01 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🌟</div>
+                <span>01</span>
+            </div>
+            <h3>Customer Satisfaction</h3>
+            <p>
+                Satisfy the customer through
+                <strong>early and continuous delivery</strong>
+                of valuable software.
+            </p>
+        </div>
+
+        <!-- 02 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🔄</div>
+                <span>02</span>
+            </div>
+            <h3>Welcome Change</h3>
+            <p>
+                Welcome <strong>changing requirements</strong>,
+                even late in development.
+            </p>
+        </div>
+
+        <!-- 03 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">⚡</div>
+                <span>03</span>
+            </div>
+            <h3>Frequent Delivery</h3>
+            <p>
+                Deliver <strong>working software frequently</strong>,
+                preferring shorter timescales.
+            </p>
+        </div>
+
+        <!-- 04 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🤝</div>
+                <span>04</span>
+            </div>
+            <h3>Daily Collaboration</h3>
+            <p>
+                Business people and developers
+                <strong>work together daily</strong>.
+            </p>
+        </div>
+
+        <!-- 05 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🚀</div>
+                <span>05</span>
+            </div>
+            <h3>Motivated People</h3>
+            <p>
+                Build projects around
+                <strong>motivated individuals</strong>
+                and trust them.
+            </p>
+        </div>
+
+        <!-- 06 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🗣️</div>
+                <span>06</span>
+            </div>
+            <h3>Face-to-Face</h3>
+            <p>
+                Use <strong>face-to-face conversation</strong>
+                for effective communication.
+            </p>
+        </div>
+
+        <!-- 07 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">💻</div>
+                <span>07</span>
+            </div>
+            <h3>Working Software</h3>
+            <p>
+                <strong>Working software</strong> is the
+                primary measure of progress.
+            </p>
+        </div>
+
+        <!-- 08 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">⚖️</div>
+                <span>08</span>
+            </div>
+            <h3>Sustainable Pace</h3>
+            <p>
+                Promote <strong>sustainable development</strong>
+                at a constant pace.
+            </p>
+        </div>
+
+        <!-- 09 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🛠️</div>
+                <span>09</span>
+            </div>
+            <h3>Technical Excellence</h3>
+            <p>
+                Maintain attention to
+                <strong>technical excellence</strong>
+                and good design.
+            </p>
+        </div>
+
+        <!-- 10 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🎈</div>
+                <span>10</span>
+            </div>
+            <h3>Simplicity</h3>
+            <p>
+                Maximize the amount of
+                <strong>work not done</strong>.
+            </p>
+        </div>
+
+        <!-- 11 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🧩</div>
+                <span>11</span>
+            </div>
+            <h3>Self-Organizing Teams</h3>
+            <p>
+                The best designs emerge from
+                <strong>self-organizing teams</strong>.
+            </p>
+        </div>
+
+        <!-- 12 -->
+        <div class="principle-card-mini">
+            <div class="principle-top">
+                <div class="principle-icon-mini">🔍</div>
+                <span>12</span>
+            </div>
+            <h3>Reflect & Improve</h3>
+            <p>
+                Regularly <strong>reflect and adjust</strong>
+                to become more effective.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+    <!-- =====================================================
+         PRINCIPLES 1-3
+    ====================================================== -->
+
+    <section class="slide">
+        <div class="kicker">Principle 01</div>
+        <div class="principle-layout">
+            <div class="principle-number">01</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🌟</div>
+                <h3>Satisfy the customer through <span class="highlight">early and continuous delivery</span> of valuable software.</h3>
+                <p>
+                    The highest priority is to provide useful software to
+                    customers as early and continuously as possible.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 02</div>
+        <div class="principle-layout">
+            <div class="principle-number">02</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🔄</div>
+                <h3><span class="highlight">Welcome changing requirements</span>, even late in development.</h3>
+                <p>
+                    Change can provide competitive advantage to the customer,
+                    so Agile teams are prepared to adapt.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 03</div>
+        <div class="principle-layout">
+            <div class="principle-number">03</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🚀</div>
+                <h3>Deliver <span class="highlight">working software frequently</span>.</h3>
+                <p>
+                    Prefer shorter delivery timescales, from a couple of weeks
+                    to a couple of months.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         PRINCIPLES 4-6
+    ====================================================== -->
+
+    <section class="slide">
+        <div class="kicker">Principle 04</div>
+        <div class="principle-layout">
+            <div class="principle-number">04</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🤝</div>
+                <h3><span class="highlight">Business people and developers</span> work together daily.</h3>
+                <p>
+                    Continuous collaboration ensures that the software
+                    solves the right business problem.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 05</div>
+        <div class="principle-layout">
+            <div class="principle-number">05</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🚀</div>
+                <h3>Build projects around <span class="highlight">motivated individuals</span>.</h3>
+                <p>
+                    Give people the environment, support, and trust they need
+                    to get the job done.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 06</div>
+        <div class="principle-layout">
+            <div class="principle-number">06</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🗣️</div>
+                <h3><span class="highlight">Face-to-face conversation</span> is highly effective.</h3>
+                <p>
+                    Direct communication is often the most efficient way
+                    to convey information within a development team.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         PRINCIPLES 7-9
+    ====================================================== -->
+
+    <section class="slide">
+        <div class="kicker">Principle 07</div>
+        <div class="principle-layout">
+            <div class="principle-number">07</div>
+            <div class="card principle-card">
+                <div class="principle-icon">💻</div>
+                <h3><span class="highlight">Working software</span> is the primary measure of progress.</h3>
+                <p>
+                    A working feature demonstrates meaningful progress better
+                    than simply completing documents or plans.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 08</div>
+        <div class="principle-layout">
+            <div class="principle-number">08</div>
+            <div class="card principle-card">
+                <div class="principle-icon">⚖️</div>
+                <h3>Promote <span class="highlight">sustainable development</span>.</h3>
+                <p>
+                    Sponsors, developers, and users should be able to maintain
+                    a constant pace indefinitely.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 09</div>
+        <div class="principle-layout">
+            <div class="principle-number">09</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🛠️</div>
+                <h3>Continuous attention to <span class="highlight">technical excellence</span> and good design.</h3>
+                <p>
+                    Strong technical practices and good design improve
+                    the team's ability to adapt.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         PRINCIPLES 10-12
+    ====================================================== -->
+
+    <section class="slide">
+        <div class="kicker">Principle 10</div>
+        <div class="principle-layout">
+            <div class="principle-number">10</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🎈</div>
+                <h3><span class="highlight">Simplicity</span> — maximizing the amount of work not done.</h3>
+                <p>
+                    Focus on essential work and avoid unnecessary features,
+                    processes, and complexity.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 11</div>
+        <div class="principle-layout">
+            <div class="principle-number">11</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🧩</div>
+                <h3>The best designs emerge from <span class="highlight">self-organizing teams</span>.</h3>
+                <p>
+                    Teams should have the autonomy to organize their work
+                    and make appropriate technical decisions.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="slide">
+        <div class="kicker">Principle 12</div>
+        <div class="principle-layout">
+            <div class="principle-number">12</div>
+            <div class="card principle-card">
+                <div class="principle-icon">🔍</div>
+                <h3>Regularly <span class="highlight">reflect and adjust</span>.</h3>
+                <p>
+                    At regular intervals, the team reflects on how to become
+                    more effective and adjusts its behavior accordingly.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         ACTIVITY INTRO
+    ====================================================== -->
+
+    <section class="slide activity">
+
+        <div class="kicker">08 • Classroom Activity</div>
+
+        <h2>Agile Principles <span class="gradient">in Action</span></h2>
+
+        <div class="card">
+
+            <div class="icon">👥</div>
+
+            <p style="font-size:22px; color:#dbe4ef; line-height:1.7;">
+
+                <span class="highlight">Think of an example software
+                application</span> and create a realistic scenario that
+                demonstrates how your assigned Agile principle would be
+                applied during the development of that application.
+
+            </p>
+
+        </div>
+
+        <p style="margin-top:25px; color:var(--muted);">
+            <span class="highlight">12 Groups</span> •
+            <span class="highlight">12 Principles</span> •
+            <span class="highlight">12 Scenarios</span>
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTIVITY TEMPLATE
+    ====================================================== -->
+
+    <section class="slide">
+
+        <div class="kicker">Activity Template</div>
+
+        <h2>Build Your <span class="gradient">Scenario</span></h2>
+
+        <div class="activity-box">
+
+            <div class="activity-step">
+                <span>Step 01</span>
+                <h3>Our Agile Principle</h3>
+                <p>____________________________</p>
+            </div>
+
+            <div class="activity-step">
+                <span>Step 02</span>
+                <h3>Choose an Application</h3>
+                <p>
+                    “Imagine we are developing
+                    <strong>____________</strong>.”
+                </p>
+            </div>
+
+            <div class="activity-step">
+                <span>Step 03</span>
+                <h3>Create the Scenario</h3>
+                <p>
+                    “During the project,
+                    <strong>____________</strong>.”
+                </p>
+            </div>
+
+            <div class="activity-step">
+                <span>Step 04</span>
+                <h3>Explain the Principle</h3>
+                <p>
+                    “This demonstrates the principle because
+                    <strong>____________</strong>.”
+                </p>
+            </div>
+
+            <div class="activity-step">
+                <span>Step 05</span>
+                <h3>What If We Didn't?</h3>
+                <p>
+                    “If we didn't follow this principle,
+                    <strong>____________</strong>.”
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         IMG
+    ====================================================== -->
+
+    <section class="slide">
+
+        <div class="kicker">Agile development</div>
+
+        <h2>Agile Development</h2>
+
+        <div class="activity-box">
+
+		<img src="agile.png" alt="Agile development">
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COMPARISON
+    ====================================================== -->
+
+    <section class="slide">
+
+        <div class="kicker">09 • Comparison</div>
+
+        <h2>Plan-Driven <span class="gradient">vs</span> Agile</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th class="plan-column">📋 Plan-Driven</th>
+                        <th class="agile-column">⚡ Agile</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Approach</td>
+                        <td>Predefined plan</td>
+                        <td>Iterative & incremental</td>
+                    </tr>
+
+                    <tr>
+                        <td>Requirements</td>
+                        <td>Defined early</td>
+                        <td>Can evolve</td>
+                    </tr>
+
+                    <tr>
+                        <td>Planning</td>
+                        <td>Detailed planning at beginning</td>
+                        <td>Continuous planning</td>
+                    </tr>
+
+                    <tr>
+                        <td>Development</td>
+                        <td>Sequential phases</td>
+                        <td>Short iterations / sprints</td>
+                    </tr>
+
+                    <tr>
+                        <td>Customer</td>
+                        <td>Mainly beginning/end</td>
+                        <td>Frequent involvement</td>
+                    </tr>
+
+                    <tr>
+                        <td>Changes</td>
+                        <td>Costly & difficult</td>
+                        <td>Expected & accommodated</td>
+                    </tr>
+
+                    <tr>
+                        <td>Testing</td>
+                        <td>Often after development phases</td>
+                        <td>Continuous</td>
+                    </tr>
+
+                    <tr>
+                        <td>Delivery</td>
+                        <td>Usually one major release</td>
+                        <td>Frequent releases</td>
+                    </tr>
+
+                    <tr>
+                        <td>Documentation</td>
+                        <td>Extensive</td>
+                        <td>Important but working software prioritized</td>
+                    </tr>
+
+                    <tr>
+                        <td>Best suited for</td>
+                        <td>Stable requirements</td>
+                        <td>Changing / uncertain requirements</td>
+                    </tr>
+
+                    <tr>
+                        <td>Risk</td>
+                        <td>May be discovered late</td>
+                        <td>Identified earlier</td>
+                    </tr>
+
+                    <tr>
+                        <td>Examples</td>
+                        <td>Waterfall, V-Model</td>
+                        <td>Scrum, XP</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         KEY TAKEAWAY
+    ====================================================== -->
+
+    <section class="slide final">
+
+        <div class="kicker">Key Takeaway</div>
+
+        <h2>
+            Don't just <span class="orange">follow the plan.</span>
+            <br>
+            <span class="gradient">Learn and adapt.</span>
+        </h2>
+
+        <p class="final-line">
+            Build → Deliver → Get Feedback → Adapt → Improve
+        </p>
+
+        <div class="hero-badge" style="margin-top:35px;">
+            ⚡ THAT IS THE AGILE MINDSET
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <div class="progress" id="progress"></div>
+
+    <div class="controls">
+
+        <button onclick="previousSlide()" title="Previous">
+            ←
+        </button>
+
+        <button onclick="nextSlide()" title="Next">
+            →
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SLIDE ENGINE
+========================================================= */
+
+const slides = document.querySelectorAll('.slide');
+
+let currentSlide = 0;
+let isAnimating = false;
+
+function showSlide(index, direction = 1) {
+
+    if (isAnimating) return;
+
+    if (index < 0) index = 0;
+    if (index >= slides.length) index = slides.length - 1;
+
+    if (index === currentSlide && slides[currentSlide].classList.contains('active')) {
+        return;
+    }
+
+    isAnimating = true;
+
+    const oldSlide = slides[currentSlide];
+    const newSlide = slides[index];
+
+    oldSlide.classList.remove('active');
+
+    if (direction < 0) {
+        newSlide.classList.add('exit-left');
+    }
+
+    requestAnimationFrame(() => {
+        newSlide.classList.add('active');
+        newSlide.classList.remove('exit-left');
+    });
+
+    currentSlide = index;
+
+    updateUI();
+
+    setTimeout(() => {
+        isAnimating = false;
+    }, 550);
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function nextSlide() {
+
+    if (currentSlide < slides.length - 1) {
+        showSlide(currentSlide + 1, 1);
+    }
+
+}
+
+function previousSlide() {
+
+    if (currentSlide > 0) {
+        showSlide(currentSlide - 1, -1);
+    }
+
+}
+
+
+/* =========================================================
+   UI UPDATE
+========================================================= */
+
+function updateUI() {
+
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+
+    const number = String(currentSlide + 1).padStart(2, '0');
+    const total = String(slides.length).padStart(2, '0');
+
+    counter.textContent = `${number} / ${total}`;
+
+    const percent =
+        ((currentSlide + 1) / slides.length) * 100;
+
+    progress.style.width = `${percent}%`;
+
+}
+
+
+/* =========================================================
+   KEYBOARD CONTROLS
+========================================================= */
+
+document.addEventListener('keydown', (event) => {
+
+    switch(event.key) {
+
+        case 'ArrowRight':
+        case ' ':
+        case 'PageDown':
+            event.preventDefault();
+            nextSlide();
+            break;
+
+        case 'ArrowLeft':
+        case 'PageUp':
+            event.preventDefault();
+            previousSlide();
+            break;
+
+        case 'Home':
+            showSlide(0, -1);
+            break;
+
+        case 'End':
+            showSlide(slides.length - 1, 1);
+            break;
+
+    }
+
+});
+
+
+/* =========================================================
+   TOUCH / SWIPE SUPPORT
+========================================================= */
+
+let touchStartX = 0;
+
+document.addEventListener('touchstart', (event) => {
+
+    touchStartX = event.changedTouches[0].screenX;
+
+}, { passive: true });
+
+
+document.addEventListener('touchend', (event) => {
+
+    const touchEndX = event.changedTouches[0].screenX;
+
+    const difference = touchStartX - touchEndX;
+
+    if (Math.abs(difference) < 50) return;
+
+    if (difference > 0) {
+        nextSlide();
+    } else {
+        previousSlide();
+    }
+
+}, { passive: true });
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateUI();
+
+</script>
+
+</body>
+</html>

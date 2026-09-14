@@ -1,0 +1,79 @@
+Want to teach Agile development. Prepare lecture in html and javascript. It should have icons and main words should be highlighted. It should be very modern, stylish and high end. 
+
+This is the content.
+
+Agile development is a software development approach where software is developed incrementally and iteratively, with continuous customer feedback, collaboration, and adaptation to changing requirements.
+
+Plan-Driven: “Plan first, then build according to the plan.”
+
+Agile: “Build in small steps, get feedback, and adapt the plan.”
+
+Agile Development
+Agile development is a software development approach where software is developed incrementally and iteratively, with continuous customer feedback, collaboration, and adaptation to changing requirements.
+
+
+Why Agile?
+
+Business and technology change rapidly
+Traditional projects give late feedback
+Long delivery cycles = high risk
+Agile embraces change and delivers value early
+
+Agile Manifesto
+
+2001: Kent Beck and 16 other software developers, referred to as “Agile Alliance”, signed the “manifesto for Agile software development”. 
+
+Individuals and interaction over processes and tool
+Working software over comprehensive documentation 
+Customer collaboration over contract negotiation 
+Responding to change over following plan
+
+That is, while there is value in the items on the right, we value the items on the left more.
+
+
+Agile principles
+
+1.Highest priority is to satisfy the customer through early and continues delivery of valuable software. 
+2.Welcome changing requirements even late in the development (for customers competitive advantage). 
+3.Deliver working software frequently, from couple of weeks to couple of months. 
+4.Business people and developers must work together daily throughout the project. 
+5.Build project around motivated Individuals. Give them the environment and support they need, and trust them to get the job done. 
+6.Most efficient and effective method of conveying information to and with team is face-to-face conversation.
+7.Working software is the primary measure of progress. 
+8.Agile processes promote sustainable development. The sponsors, developers, and users should be able to maintain a constant pace indefinitely. 
+9.Continuous attention to technical excellence and good design enhances agility. 
+10.Simplicity--the art of maximizing the amount of work not done--is essential. 
+11.The best architectures, requirements, and designs emerge from self-organizing teams. 
+12.At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly
+
+
+Activity:
+Think of an example software application and create a realistic scenario that demonstrates how your assigned Agile principle would be applied during the development of that application.
+
+Our Agile Principle: __________
+
+Scenario:
+“Imagine we are developing __________. During the project, __________.”
+
+How does this demonstrate the principle?
+“This demonstrates the principle because __________.”
+
+What if we didn't follow it?
+“If we didn't follow this principle, __________.”
+
+
+
+Plan driven vs Agile development
+Aspect	Plan-Driven Development	Agile Development
+Approach	Development follows a predefined plan	Development is iterative and incremental
+Requirements	Requirements are defined early and changes are discouraged	Requirements can evolve throughout development
+Planning	Detailed planning is done at the beginning	Planning is done continuously in short iterations
+Development	Usually follows sequential phases	Work is divided into small iterations/sprints
+Customer involvement	Mainly at the beginning and end	Frequent and continuous involvement
+Changes	Changes can be costly and difficult	Changes are expected and accommodated
+Testing	Often performed after major development phases	Testing occurs continuously
+Delivery	Usually one major release at the end	Frequent releases/increments
+Documentation	Extensive documentation	Documentation is important but generally less emphasized than working software
+Best suited for	Stable, well-understood requirements	Changing or uncertain requirements
+Risk	Risks may be discovered late	Risks can be identified earlier through iterations
+Examples	Waterfall, V-Model	Scrum, Extreme Programming (XP)

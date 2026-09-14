@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban — Interactive Agile Tutorial</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --bg: #070b14;
+    --bg2: #0d1322;
+    --card: rgba(18, 25, 42, .72);
+    --card-solid: #11192a;
+    --border: rgba(255,255,255,.09);
+    --text: #f4f7fb;
+    --muted: #94a3b8;
+    --cyan: #22d3ee;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --yellow: #facc15;
+    --red: #fb7185;
+    --shadow: 0 25px 70px rgba(0,0,0,.35);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(34,211,238,.10), transparent 28%),
+        radial-gradient(circle at 90% 15%, rgba(139,92,246,.13), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(59,130,246,.08), transparent 35%),
+        var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+/* NAVIGATION */
+
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(18px);
+    background: rgba(7,11,20,.72);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: auto;
+    padding: 15px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: "Space Grotesk";
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.logo span {
+    color: var(--cyan);
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+/* GENERAL */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 24px;
+}
+
+section {
+    padding: 90px 0;
+}
+
+.eyebrow {
+    display: inline-flex;
+    padding: 6px 12px;
+    border: 1px solid rgba(34,211,238,.25);
+    background: rgba(34,211,238,.07);
+    border-radius: 100px;
+    color: var(--cyan);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+h1, h2, h3 {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+h1 {
+    font-size: clamp(45px, 7vw, 86px);
+    line-height: .98;
+    letter-spacing: -4px;
+}
+
+h2 {
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 18px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+.gradient {
+    background: linear-gradient(100deg, #fff, #67e8f9, #a78bfa);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    max-width: 720px;
+    color: var(--muted);
+    font-size: 18px;
+    margin-top: 25px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(20px);
+}
+
+/* HERO */
+
+.hero {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.hero-badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 25px;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.pulse {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--green);
+}
+
+.hero-board {
+    padding: 18px;
+    transform: rotate(2deg);
+    transition: .5s;
+}
+
+.hero-board:hover {
+    transform: rotate(0) translateY(-8px);
+}
+
+.mini-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.mini-col {
+    background: rgba(255,255,255,.035);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.mini-title {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+.mini-card {
+    height: 55px;
+    background: #182238;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    padding: 8px;
+    font-size: 8px;
+    color: #cbd5e1;
+    border-left: 3px solid var(--cyan);
+}
+
+/* CONCEPT */
+
+.compare {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 40px;
+}
+
+.compare-card {
+    padding: 28px;
+    transition: .3s;
+}
+
+.compare-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(255,255,255,.18);
+}
+
+.icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    font-size: 23px;
+}
+
+.xp .icon {
+    background: rgba(139,92,246,.15);
+    color: var(--purple);
+}
+
+.scrum .icon {
+    background: rgba(59,130,246,.15);
+    color: var(--blue);
+}
+
+.kanban .icon {
+    background: rgba(34,211,238,.15);
+    color: var(--cyan);
+}
+
+.compare-card p {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+/* KANBAN BOARD */
+
+.board-wrapper {
+    padding: 22px;
+    margin-top: 40px;
+    overflow-x: auto;
+}
+
+.board {
+    min-width: 900px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.column {
+    background: rgba(255,255,255,.035);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 13px;
+    min-height: 430px;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.column-name {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.count {
+    background: rgba(255,255,255,.08);
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 10px;
+}
+
+.task {
+    background: #141e32;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 13px;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: grab;
+    transition: .25s;
+}
+
+.task:hover {
+    transform: translateY(-3px);
+    border-color: rgba(34,211,238,.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.task-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.task-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #64748b;
+    font-size: 9px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 6px;
+    font-size: 8px;
+    margin-bottom: 7px;
+}
+
+.tag-blue {
+    background: rgba(59,130,246,.13);
+    color: #60a5fa;
+}
+
+.tag-purple {
+    background: rgba(139,92,246,.13);
+    color: #a78bfa;
+}
+
+.tag-green {
+    background: rgba(34,197,94,.13);
+    color: #4ade80;
+}
+
+/* FLOW */
+
+.flow-box {
+    padding: 32px;
+    margin-top: 40px;
+}
+
+.flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.flow-step {
+    padding: 15px 22px;
+    border-radius: 12px;
+    background: #151f34;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.arrow {
+    color: var(--cyan);
+    font-size: 20px;
+}
+
+/* COMPONENTS */
+
+.components {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 40px;
+}
+
+.component {
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.component-number {
+    position: absolute;
+    right: 22px;
+    top: 12px;
+    font-size: 60px;
+    font-family: "Space Grotesk";
+    font-weight: 700;
+    color: rgba(255,255,255,.025);
+}
+
+.component p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* WIP */
+
+.wip-demo {
+    padding: 35px;
+    margin-top: 40px;
+}
+
+.wip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.wip-counter {
+    font-family: "Space Grotesk";
+    color: var(--cyan);
+    font-size: 25px;
+}
+
+.wip-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.wip-column {
+    min-height: 220px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 14px;
+}
+
+.wip-task {
+    background: #182238;
+    border-radius: 9px;
+    padding: 12px;
+    margin-top: 8px;
+    font-size: 11px;
+}
+
+.wip-column.over {
+    border-color: var(--red);
+    box-shadow: 0 0 25px rgba(251,113,133,.1);
+}
+
+button {
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.primary-btn {
+    background: linear-gradient(100deg, var(--cyan), var(--blue));
+    color: #031018;
+    padding: 11px 17px;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+/* METRICS */
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 40px;
+}
+
+.metric {
+    padding: 28px;
+}
+
+.metric-value {
+    font-size: 38px;
+    font-family: "Space Grotesk";
+    color: var(--cyan);
+    margin-bottom: 5px;
+}
+
+.metric p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* PROS CONS */
+
+.pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.pros, .cons {
+    padding: 30px;
+}
+
+.pros {
+    border-color: rgba(34,197,94,.18);
+}
+
+.cons {
+    border-color: rgba(251,113,133,.18);
+}
+
+.list-item {
+    display: flex;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.check {
+    color: var(--green);
+}
+
+.cross {
+    color: var(--red);
+}
+
+/* QUIZ */
+
+.quiz {
+    padding: 35px;
+    margin-top: 40px;
+}
+
+.question {
+    padding: 25px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.question h3 {
+    margin-bottom: 15px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: rgba(255,255,255,.035);
+    border: 1px solid var(--border);
+    color: #cbd5e1;
+    padding: 13px 15px;
+    border-radius: 10px;
+    margin: 8px 0;
+    transition: .2s;
+}
+
+.option:hover {
+    border-color: var(--cyan);
+    background: rgba(34,211,238,.06);
+}
+
+.option.correct {
+    border-color: var(--green);
+    background: rgba(34,197,94,.12);
+    color: #86efac;
+}
+
+.option.wrong {
+    border-color: var(--red);
+    background: rgba(251,113,133,.10);
+    color: #fda4af;
+}
+
+.quiz-result {
+    text-align: center;
+    padding: 30px;
+    display: none;
+}
+
+.score {
+    font-size: 60px;
+    font-family: "Space Grotesk";
+    color: var(--cyan);
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 35px 0;
+    color: var(--muted);
+    text-align: center;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 800px) {
+    .hero-grid,
+    .compare,
+    .components,
+    .metrics,
+    .pros-cons {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    section {
+        padding: 65px 0;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .wip-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.image-card {
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 25px 60px rgba(0,0,0,.35);
+}
+
+.image-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="nav-inner">
+        <div class="logo">KAN<span>BAN</span> • AGILE</div>
+
+        <div class="nav-links">
+            <a href="#intro">Intro</a>
+            <a href="#board">Board</a>
+            <a href="#components">Components</a>
+            <a href="#metrics">Metrics</a>
+            <a href="#quiz">Quiz</a>
+        </div>
+    </div>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero" id="intro">
+<div class="container">
+
+    <div class="hero-grid">
+
+        <div>
+            <div class="hero-badge">
+                <span class="pulse"></span>
+                Agile Project Management
+            </div>
+
+            <h1>
+                Visualize.<br>
+                <span class="gradient">Flow.</span><br>
+                Deliver.
+            </h1>
+
+            <p class="subtitle">
+                An interactive tutorial on Kanban — a lightweight Agile
+                approach for visualizing work, limiting work in progress,
+                and creating a smooth continuous flow.
+            </p>
+        </div>
+
+        <div class="card hero-board">
+            <div class="mini-columns">
+
+                <div class="mini-col">
+                    <div class="mini-title">BACKLOG</div>
+                    <div class="mini-card">Customer login</div>
+                    <div class="mini-card">Search feature</div>
+                    <div class="mini-card">Dark mode</div>
+                </div>
+
+                <div class="mini-col">
+                    <div class="mini-title">IN PROGRESS</div>
+                    <div class="mini-card">Payment API</div>
+                    <div class="mini-card">Dashboard UI</div>
+                </div>
+
+                <div class="mini-col">
+                    <div class="mini-title">COMPLETED</div>
+                    <div class="mini-card">User profile</div>
+                    <div class="mini-card">Email alerts</div>
+                    <div class="mini-card">Bug fixes</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- XP VS SCRUM VS KANBAN -->
+<section>
+<div class="container">
+
+    <div class="eyebrow">The Agile Family</div>
+
+    <h2>Three approaches.<br><span class="gradient">One common goal.</span></h2>
+
+    <p class="subtitle">
+        XP, Scrum and Kanban are Agile approaches designed to help teams
+        deliver valuable, working software quickly and continuously while
+        responding to changing customer needs.
+    </p>
+
+    <div class="compare">
+
+        <div class="card compare-card xp">
+            <div class="icon">⚙</div>
+            <h3>Extreme Programming</h3>
+            <p>
+                Focuses heavily on <strong>how software is developed</strong>.
+                Pair programming, refactoring and test-first development
+                are examples of XP practices.
+            </p>
+        </div>
+
+        <div class="card compare-card scrum">
+            <div class="icon">◫</div>
+            <h3>Scrum</h3>
+            <p>
+                Focuses on <strong>iterative project management</strong>.
+                Work is organized into fixed-length iterations called
+                Sprints.
+            </p>
+        </div>
+
+        <div class="card compare-card kanban">
+            <div class="icon">→</div>
+            <h3>Kanban</h3>
+            <p>
+                Focuses on <strong>continuous work and flow</strong>.
+                Work moves through a visual system from request to delivery.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- WHAT IS KANBAN -->
+<section>
+<div class="container">
+
+    <div class="eyebrow">01 • Core Concept</div>
+
+    <h2>What exactly is <span class="gradient">Kanban?</span></h2>
+
+    <p class="subtitle">
+        Kanban is an Agile project management method that uses
+        <strong>visual boards</strong> to help teams track work through
+        stages of completion.
+    </p>
+
+    <div class="card flow-box">
+
+        <div class="flow">
+
+            <div class="flow-step">📋 Product Backlog</div>
+            <div class="arrow">→</div>
+
+            <div class="flow-step">📝 To Do</div>
+            <div class="arrow">→</div>
+
+            <div class="flow-step">⚡ In Progress</div>
+            <div class="arrow">→</div>
+
+            <div class="flow-step">✓ Completed</div>
+
+        </div>
+
+        <p style="text-align:center;color:var(--muted);margin-top:25px;">
+            Kanban <strong style="color:white;">pulls</strong> work items
+            from the backlog into a steady, manageable
+            <strong style="color:var(--cyan);">flow</strong>.
+        </p>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- INTERACTIVE BOARD -->
+<section id="board">
+<div class="container">
+
+    <div class="eyebrow">02 • Visual Workflow</div>
+
+
+<div class="image-card">
+    <img src="kanbanboard_2.png" alt="Kanban board">
+</div>
+<div class="image-card">
+    <img src="kanbanboard_3.jpg" alt="Kanban board">
+</div>
+<div class="image-card">
+    <img src="kanbanboard_4.jpg" alt="Kanban board">
+</div>
+
+
+    <h2>Your <span class="gradient">Kanban Board</span></h2>
+
+    <p class="subtitle">
+        A board provides the team with a shared view of upcoming,
+        active, blocked and completed work.
+    </p>
+
+    <div class="card board-wrapper">
+
+        <div class="board">
+
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-name">📋 Backlog</span>
+                    <span class="count">3</span>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-blue">FEATURE</span>
+                    <div class="task-title">Customer Search</div>
+                    <div class="task-meta">
+                        <span>Ali</span><span>High</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-purple">UI</span>
+                    <div class="task-title">Dark Mode</div>
+                    <div class="task-meta">
+                        <span>Sarah</span><span>Medium</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-blue">FEATURE</span>
+                    <div class="task-title">Export Reports</div>
+                    <div class="task-meta">
+                        <span>Omar</span><span>Low</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-name">📝 To Do</span>
+                    <span class="count">2</span>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-blue">FEATURE</span>
+                    <div class="task-title">Payment Integration</div>
+                    <div class="task-meta">
+                        <span>Hamza</span><span>High</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-purple">UI</span>
+                    <div class="task-title">Dashboard Design</div>
+                    <div class="task-meta">
+                        <span>Ayesha</span><span>Medium</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-name">⚡ In Progress</span>
+                    <span class="count">2</span>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-blue">API</span>
+                    <div class="task-title">Authentication API</div>
+                    <div class="task-meta">
+                        <span>Bilal</span><span>High</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-purple">BUG</span>
+                    <div class="task-title">Fix Checkout Error</div>
+                    <div class="task-meta">
+                        <span>Maryam</span><span>High</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-name">✓ Completed</span>
+                    <span class="count">3</span>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-green">DONE</span>
+                    <div class="task-title">User Profile</div>
+                    <div class="task-meta">
+                        <span>Ali</span><span>Done</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-green">DONE</span>
+                    <div class="task-title">Email Notifications</div>
+                    <div class="task-meta">
+                        <span>Sarah</span><span>Done</span>
+                    </div>
+                </div>
+
+                <div class="task">
+                    <span class="tag tag-green">DONE</span>
+                    <div class="task-title">Bug Fixes</div>
+                    <div class="task-meta">
+                        <span>Omar</span><span>Done</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</section>
+
+
+<!-- COMPONENTS -->
+<section id="components">
+<div class="container">
+
+    <div class="eyebrow">03 • Building Blocks</div>
+
+    <h2>Core components of a <span class="gradient">Kanban board</span></h2>
+
+    <div class="components">
+
+        <div class="card component">
+            <span class="component-number">01</span>
+            <h3>Kanban Board</h3>
+            <p>
+                The surface your team uses to track work. It can be a
+                physical whiteboard with sticky notes or a digital board.
+                It provides a shared view of active, upcoming, blocked
+                and completed tasks.
+            </p>
+        </div>
+
+        <div class="card component">
+            <span class="component-number">02</span>
+            <h3>Kanban Cards</h3>
+            <p>
+                Cards represent individual tasks or work items. They can
+                contain a title, owner, due date, priority, description
+                and supporting files.
+            </p>
+        </div>
+
+        <div class="card component">
+            <span class="component-number">03</span>
+            <h3>Columns</h3>
+            <p>
+                Columns represent the stages through which work moves.
+                Examples include To Do, In Progress, Review, Testing
+                and Done.
+            </p>
+        </div>
+
+        <div class="card component">
+            <span class="component-number">04</span>
+            <h3>Swimlanes</h3>
+            <p>
+                Horizontal sections that separate work on the same board.
+                Teams can group work by priority, project, team,
+                work type or customer.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- WIP LIMIT -->
+<section>
+<div class="container">
+
+    <div class="eyebrow">04 • Flow Control</div>
+
+    <h2>Work In Progress <span class="gradient">(WIP) Limits</span></h2>
+
+    <p class="subtitle">
+        WIP limits restrict how many tasks can exist in a particular
+        stage at one time. The goal is to reduce multitasking and
+        encourage finishing work before starting more.
+    </p>
+
+    <div class="card wip-demo">
+
+        <div class="wip-header">
+            <div>
+                <h3>Interactive WIP demonstration</h3>
+                <p style="color:var(--muted);font-size:13px;">
+                    Maximum allowed in "In Progress": 3
+                </p>
+            </div>
+
+            <div class="wip-counter">
+                <span id="wipCount">2</span>/3
+            </div>
+        </div>
+
+        <div class="wip-columns">
+
+            <div class="wip-column">
+                <strong>To Do</strong>
+                <div class="wip-task">Design homepage</div>
+                <div class="wip-task">Write API tests</div>
+                <div class="wip-task">Prepare release notes</div>
+            </div>
+
+            <div class="wip-column" id="inProgress">
+                <strong>In Progress</strong>
+                <div class="wip-task">Build dashboard</div>
+                <div class="wip-task">Payment API</div>
+            </div>
+
+            <div class="wip-column">
+                <strong>Done</strong>
+                <div class="wip-task">Login screen</div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:25px;">
+            <button class="primary-btn" onclick="addWork()">
+                + Pull Work
+            </button>
+
+            <button
+                class="primary-btn"
+                style="margin-left:8px;background:#1e293b;color:white;"
+                onclick="finishWork()">
+                ✓ Finish Work
+            </button>
+        </div>
+
+        <p id="wipMessage"
+           style="margin-top:18px;color:var(--muted);font-size:13px;">
+            The team has room for one more active task.
+        </p>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- MEASURING WORK -->
+<section id="metrics">
+<div class="container">
+
+    <div class="eyebrow">05 • Measuring Flow</div>
+
+    <h2>How do we <span class="gradient">measure work?</span></h2>
+
+    <div class="metrics">
+
+        <div class="card metric">
+            <div class="metric-value">Lead</div>
+            <h3>Lead Time</h3>
+            <p>
+                Total elapsed time from the moment a customer makes
+                a request until the work is fully delivered.
+            </p>
+        </div>
+
+        <div class="card metric">
+            <div class="metric-value">Cycle</div>
+            <h3>Cycle Time</h3>
+            <p>
+                Active time required to complete a work item once
+                actual work has started.
+            </p>
+        </div>
+
+        <div class="card metric">
+            <div class="metric-value">Flow</div>
+            <h3>Throughput</h3>
+            <p>
+                Number of work items completed by the team over
+                a specific period such as a day, week or month.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- BENEFITS -->
+<section>
+<div class="container">
+
+    <div class="eyebrow">06 • Evaluation</div>
+
+    <h2>Kanban boards: <span class="gradient">Pros & Cons</span></h2>
+
+    <div class="pros-cons">
+
+        <div class="card pros">
+            <h3 style="color:var(--green);">✓ Benefits</h3>
+
+            <div class="list-item">
+                <span class="check">✓</span>
+                At-a-glance insight into team work and workflows
+            </div>
+
+            <div class="list-item">
+                <span class="check">✓</span>
+                Centralizes work visibility for remote teams
+            </div>
+
+            <div class="list-item">
+                <span class="check">✓</span>
+                Encourages flexibility and continuous improvement
+            </div>
+
+            <div class="list-item">
+                <span class="check">✓</span>
+                Improves efficiency and reduces workflow waste
+            </div>
+        </div>
+
+
+        <div class="card cons">
+            <h3 style="color:var(--red);">× Disadvantages</h3>
+
+            <div class="list-item">
+                <span class="cross">×</span>
+                May sometimes be less familiar to teams outside engineering
+            </div>
+
+            <div class="list-item">
+                <span class="cross">×</span>
+                Can become overwhelming with too many tasks
+            </div>
+
+            <div class="list-item">
+                <span class="cross">×</span>
+                Requires discipline to maintain WIP limits
+            </div>
+
+            <div class="list-item">
+                <span class="cross">×</span>
+                May not suit teams requiring fixed sprints
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<!-- QUIZ -->
+<section id="quiz">
+<div class="container">
+
+    <div class="eyebrow">07 • Knowledge Check</div>
+
+    <h2>Test your <span class="gradient">Kanban knowledge</span></h2>
+
+    <p class="subtitle">
+        Choose the best answer for each question.
+    </p>
+
+    <div class="card quiz">
+
+        <div class="question">
+            <h3>1. What is the primary focus of Kanban?</h3>
+
+            <button class="option" data-q="1" data-correct="false">
+                Fixed-length Sprints
+            </button>
+
+            <button class="option" data-q="1" data-correct="true">
+                Continuous flow of work
+            </button>
+
+            <button class="option" data-q="1" data-correct="false">
+                Pair programming
+            </button>
+
+            <button class="option" data-q="1" data-correct="false">
+                Writing tests before code
+            </button>
+        </div>
+
+
+        <div class="question">
+            <h3>2. What does a Kanban card represent?</h3>
+
+            <button class="option" data-q="2" data-correct="true">
+                An individual task or work item
+            </button>
+
+            <button class="option" data-q="2" data-correct="false">
+                A complete project
+            </button>
+
+            <button class="option" data-q="2" data-correct="false">
+                A Scrum Sprint
+            </button>
+
+            <button class="option" data-q="2" data-correct="false">
+                A team member
+            </button>
+        </div>
+
+
+        <div class="question">
+            <h3>3. What is the purpose of a WIP limit?</h3>
+
+            <button class="option" data-q="3" data-correct="false">
+                Increase the number of simultaneous tasks
+            </button>
+
+            <button class="option" data-q="3" data-correct="true">
+                Limit active work and reduce multitasking
+            </button>
+
+            <button class="option" data-q="3" data-correct="false">
+                Create longer Sprints
+            </button>
+
+            <button class="option" data-q="3" data-correct="false">
+                Eliminate the backlog
+            </button>
+        </div>
+
+
+        <div class="question">
+            <h3>4. What is cycle time?</h3>
+
+            <button class="option" data-q="4" data-correct="false">
+                Time from customer request to delivery
+            </button>
+
+            <button class="option" data-q="4" data-correct="true">
+                Active time from work starting to completion
+            </button>
+
+            <button class="option" data-q="4" data-correct="false">
+                Number of completed tasks
+            </button>
+
+            <button class="option" data-q="4" data-correct="false">
+                Length of a Scrum Sprint
+            </button>
+        </div>
+
+
+        <div class="question">
+            <h3>5. What does throughput measure?</h3>
+
+            <button class="option" data-q="5" data-correct="false">
+                Time spent on one task
+            </button>
+
+            <button class="option" data-q="5" data-correct="false">
+                Number of people on the team
+            </button>
+
+            <button class="option" data-q="5" data-correct="true">
+                Work items completed during a period
+            </button>
+
+            <button class="option" data-q="5" data-correct="false">
+                Number of backlog items
+            </button>
+        </div>
+
+
+        <button
+            class="primary-btn"
+            id="submitQuiz"
+            style="margin-top:30px;">
+            Submit Quiz
+        </button>
+
+
+        <div class="quiz-result" id="quizResult">
+            <div class="score" id="score">0/5</div>
+            <h3 id="resultText"></h3>
+            <p style="color:var(--muted);">
+                Review the concepts above and try again.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+
+<footer>
+    <div class="container">
+        Kanban • Agile Learning Module
+        <br>
+        <span style="opacity:.6;">
+            Reference: Asana — What is Kanban?
+        </span>
+    </div>
+</footer>
+
+
+<script>
+
+/* =========================
+   WIP DEMONSTRATION
+========================= */
+
+let wip = 2;
+const limit = 3;
+
+function updateWIP() {
+
+    document.getElementById("wipCount").textContent = wip;
+
+    const column = document.getElementById("inProgress");
+    const message = document.getElementById("wipMessage");
+
+    if (wip >= limit) {
+
+        column.classList.add("over");
+
+        message.innerHTML =
+            "⚠️ <strong style='color:#fb7185'>WIP limit reached.</strong> " +
+            "Finish existing work before pulling another task.";
+
+    } else {
+
+        column.classList.remove("over");
+
+        message.textContent =
+            "The team has room for one more active task.";
+    }
+}
+
+
+function addWork() {
+
+    if (wip >= limit) {
+        updateWIP();
+        return;
+    }
+
+    wip++;
+
+    const task = document.createElement("div");
+
+    task.className = "wip-task";
+    task.textContent = "New pulled task";
+
+    document.getElementById("inProgress").appendChild(task);
+
+    updateWIP();
+}
+
+
+function finishWork() {
+
+    if (wip <= 0) return;
+
+    const column = document.getElementById("inProgress");
+
+    const tasks = column.querySelectorAll(".wip-task");
+
+    if (tasks.length) {
+        tasks[tasks.length - 1].remove();
+    }
+
+    wip--;
+
+    updateWIP();
+}
+
+
+/* =========================
+   QUIZ
+========================= */
+
+const answers = {};
+
+document.querySelectorAll(".option").forEach(option => {
+
+    option.addEventListener("click", function() {
+
+        const question = this.dataset.q;
+
+        document
+            .querySelectorAll(`.option[data-q="${question}"]`)
+            .forEach(btn => {
+                btn.classList.remove("selected");
+                btn.style.borderColor = "";
+            });
+
+        this.classList.add("selected");
+        this.style.borderColor = "var(--cyan)";
+
+        answers[question] = this.dataset.correct === "true";
+    });
+
+});
+
+
+document.getElementById("submitQuiz")
+.addEventListener("click", function() {
+
+    let score = 0;
+
+    for (let i = 1; i <= 5; i++) {
+
+        const selected =
+            document.querySelector(
+                `.option[data-q="${i}"].selected`
+            );
+
+        if (selected) {
+
+            if (selected.dataset.correct === "true") {
+
+                selected.classList.add("correct");
+                score++;
+
+            } else {
+
+                selected.classList.add("wrong");
+
+                const correct =
+                    document.querySelector(
+                        `.option[data-q="${i}"][data-correct="true"]`
+                    );
+
+                correct.classList.add("correct");
+            }
+
+        }
+
+    }
+
+    document.getElementById("score").textContent =
+        `${score}/5`;
+
+    const result = document.getElementById("resultText");
+
+    if (score === 5) {
+        result.textContent = "Excellent! You understand Kanban very well.";
+    } else if (score >= 3) {
+        result.textContent = "Good work! Review a few concepts and try again.";
+    } else {
+        result.textContent = "Keep learning! Review the tutorial and retry.";
+    }
+
+    document.getElementById("quizResult").style.display = "block";
+
+    document
+        .getElementById("quizResult")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+});
+
+
+/* =========================
+   REVEAL ANIMATIONS
+========================= */
+
+const observer = new IntersectionObserver(
+    entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+
+            }
+
+        });
+
+    },
+    { threshold: .08 }
+);
+
+
+document
+    .querySelectorAll(".card, h2, .eyebrow")
+    .forEach(el => {
+
+        el.style.opacity = "0";
+        el.style.transform = "translateY(18px)";
+        el.style.transition = "opacity .7s ease, transform .7s ease";
+
+        observer.observe(el);
+
+    });
+
+</script>
+
+</body>
+</html>
