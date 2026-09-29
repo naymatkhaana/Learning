@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Locality Sensitive Hashing — Interactive Tutorial</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       SCROLL PROGRESS
+  ====================================================== -->
+
+  <div class="progress"></div>
+
+
+  <!-- =====================================================
+       NAVIGATION
+  ====================================================== -->
+
+  <nav class="top-nav">
+
+    <a href="#intro">LSH</a>
+
+    <a href="#entity">
+      Entity Resolution
+    </a>
+
+    <a href="#companies">
+      Company A & B
+    </a>
+
+    <a href="#fingerprints">
+      Fingerprints
+    </a>
+
+  </nav>
+
+
+  <main>
+
+
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
+
+    <section id="intro" class="hero">
+
+      <div class="hero-content reveal">
+
+        <div class="eyebrow">
+          Interactive Data Mining Tutorial
+        </div>
+
+        <h1>
+          Locality Sensitive Hashing
+        </h1>
+
+        <p>
+          How can we find similar objects when comparing
+          every possible pair would be impossibly expensive?
+        </p>
+
+        <div class="pipeline">
+
+          <div class="pipeline-step">
+            Huge Dataset
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            LSH
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Candidate Pairs
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Similarity
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         PART 1 — ENTITY RESOLUTION
+    ==================================================== -->
+
+    <section id="entity">
+
+      <div class="section-header reveal">
+
+        <div class="eyebrow">
+          Part 01
+        </div>
+
+        <h2>
+          What is Entity Resolution?
+        </h2>
+
+        <p>
+          Entity resolution means determining whether records
+          from different datasets refer to the same real-world
+          entity.
+        </p>
+
+      </div>
+
+
+      <!-- Example -->
+
+      <div class="demo reveal">
+
+        <h3>
+          Are these the same person?
+        </h3>
+
+        <p>
+          Look carefully at the information in the two
+          databases.
+        </p>
+
+
+        <div class="records">
+
+          <!-- Database A -->
+
+          <div class="record">
+
+            <h3>
+              Database A
+            </h3>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Name
+              </span>
+
+              <span class="record-value">
+                William S. Jones
+              </span>
+
+            </div>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Address
+              </span>
+
+              <span class="record-value">
+                24 Main Street
+              </span>
+
+            </div>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Phone
+              </span>
+
+              <span class="record-value">
+                555-1234
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Database B -->
+
+          <div class="record">
+
+            <h3>
+              Database B
+            </h3>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Name
+              </span>
+
+              <span class="record-value">
+                Bill Jones
+              </span>
+
+            </div>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Address
+              </span>
+
+              <span class="record-value">
+                24 Main St.
+              </span>
+
+            </div>
+
+            <div class="record-row">
+
+              <span class="record-label">
+                Phone
+              </span>
+
+              <span class="record-value">
+                555-9876
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Question -->
+
+        <div style="margin-top:25px">
+
+          <strong>
+            What do you think?
+          </strong>
+
+          <p>
+            Could these two records represent the same person?
+          </p>
+
+          <button
+            class="btn"
+            data-entity-answer="yes"
+          >
+            Yes
+          </button>
+
+          <button
+            class="btn secondary"
+            data-entity-answer="no"
+          >
+            No
+          </button>
+
+        </div>
+
+
+        <div id="entityFeedback"></div>
+
+
+        <button
+          id="revealEntity"
+          class="btn secondary"
+          style="margin-top:18px"
+        >
+          Reveal Explanation
+        </button>
+
+
+        <div
+          id="entityAnswer"
+          class="answer"
+          hidden
+        >
+
+          Yes, they could be the same person.
+
+          <br><br>
+
+          Names can differ because of nicknames:
+
+          <strong>
+            William → Bill
+          </strong>
+
+          <br>
+
+          Addresses can differ because of formatting:
+
+          <strong>
+            Street → St.
+          </strong>
+
+          <br>
+
+          Phone numbers can differ because someone may
+          provide a home phone to one company and a mobile
+          phone to another.
+
+          <br><br>
+
+          This is why entity resolution requires
+          <strong>similarity</strong>, not simply exact equality.
+
+        </div>
+
+      </div>
+
+
+      <!-- Definition -->
+
+      <div class="two-col" style="margin-top:25px">
+
+        <div class="card reveal">
+
+          <h3>
+            Traditional matching
+          </h3>
+
+          <p>
+            "Are the two values exactly equal?"
+          </p>
+
+          <div class="formula">
+            William ≠ Bill
+          </div>
+
+          <p>
+            This can incorrectly reject real matches.
+          </p>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <h3>
+            Entity resolution
+          </h3>
+
+          <p>
+            "How likely is it that these records describe
+            the same entity?"
+          </p>
+
+          <div class="formula">
+            William ≈ Bill
+          </div>
+
+          <p>
+            We use multiple pieces of evidence to decide.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         PART 2 — COMPANY A AND B
+    ==================================================== -->
+
+    <section id="companies">
+
+      <div class="section-header reveal">
+
+        <div class="eyebrow">
+          Part 02
+        </div>
+
+        <h2>
+          One Trillion Possible Pairs
+        </h2>
+
+        <p>
+          Now imagine two companies, each with one million
+          customer records.
+        </p>
+
+      </div>
+
+
+      <!-- One trillion -->
+
+      <div class="demo reveal">
+
+        <h3>
+          Company A × Company B
+        </h3>
+
+        <div
+          id="pairCounter"
+          class="big-number"
+        >
+          1,000,000 × 1,000,000
+        </div>
+
+        <p>
+          Every record from A could potentially be compared
+          with every record from B.
+        </p>
+
+        <button
+          id="calculatePairs"
+          class="btn"
+        >
+          Calculate Pairs
+        </button>
+
+      </div>
+
+
+      <!-- Explanation -->
+
+      <div class="card reveal" style="margin-top:25px">
+
+        <h3>
+          Why is this a problem?
+        </h3>
+
+        <p>
+          One million records in A multiplied by one million
+          records in B gives:
+        </p>
+
+        <div class="formula">
+          1,000,000 × 1,000,000
+          =
+          1,000,000,000,000
+        </div>
+
+        <p>
+          That's <strong>one trillion possible pairs</strong>.
+        </p>
+
+        <p>
+          Comparing every pair is extremely expensive.
+          LSH helps us avoid most of those comparisons.
+        </p>
+
+      </div>
+
+
+      <!-- LSH process -->
+
+      <div
+        class="demo reveal"
+        style="margin-top:25px"
+      >
+
+        <h3>
+          Candidate Generation with LSH
+        </h3>
+
+        <p>
+          Instead of comparing everything with everything,
+          we organize records using several simple keys.
+        </p>
+
+
+        <div class="pipeline">
+
+          <div class="pipeline-step">
+            Name
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Phone
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Address
+          </div>
+
+        </div>
+
+
+        <div
+          class="formula"
+          style="margin:25px 0"
+        >
+          Name → candidate pairs<br>
+          Phone → candidate pairs<br>
+          Address → candidate pairs
+        </div>
+
+
+        <button
+          id="nextHashStep"
+          class="btn"
+        >
+          Next Step
+        </button>
+
+
+        <div
+          id="hashStepTitle"
+          style="
+            margin-top:25px;
+            font-size:1.4rem;
+            font-weight:700;
+          "
+        >
+          Ready
+        </div>
+
+
+        <p id="hashStepDescription">
+          Click Next Step to begin finding candidate pairs.
+        </p>
+
+
+        <div
+          style="
+            height:6px;
+            background:rgba(255,255,255,.07);
+            border-radius:10px;
+            overflow:hidden;
+            margin-top:20px;
+          "
+        >
+
+          <div
+            id="hashProgress"
+            style="
+              width:0%;
+              height:100%;
+              background:linear-gradient(
+                90deg,
+                #39e1ff,
+                #9b7cff
+              );
+              transition:width .5s ease;
+            "
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Three hashing stages -->
+
+      <div class="three-col" style="margin-top:25px">
+
+        <div
+          class="card hash-step reveal"
+        >
+
+          <div class="eyebrow">
+            Step 1
+          </div>
+
+          <h3>
+            Hash by Name
+          </h3>
+
+          <p>
+            Records with identical names become candidate
+            pairs.
+          </p>
+
+        </div>
+
+
+        <div
+          class="card hash-step reveal"
+        >
+
+          <div class="eyebrow">
+            Step 2
+          </div>
+
+          <h3>
+            Hash by Phone
+          </h3>
+
+          <p>
+            Records with identical phone numbers become
+            candidate pairs.
+          </p>
+
+        </div>
+
+
+        <div
+          class="card hash-step reveal"
+        >
+
+          <div class="eyebrow">
+            Step 3
+          </div>
+
+          <h3>
+            Hash by Address
+          </h3>
+
+          <p>
+            Records with identical addresses become candidate
+            pairs.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Candidate records -->
+
+      <div
+        class="demo reveal"
+        style="margin-top:25px"
+      >
+
+        <h3>
+          From 1 Trillion to Likely Candidates
+        </h3>
+
+        <p>
+          LSH does not make the final decision. It simply
+          reduces the number of pairs that need detailed
+          comparison.
+        </p>
+
+
+        <div class="candidate-row record">
+          William Jones ↔ Bill Jones
+        </div>
+
+        <div class="candidate-row record">
+          Sarah Khan ↔ Sara Khan
+        </div>
+
+        <div class="candidate-row record">
+          John Smith ↔ John Smith
+        </div>
+
+
+        <button
+          id="showCandidates"
+          class="btn"
+          style="margin-top:20px"
+        >
+          Find Candidates
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         PART 3 — FINGERPRINT MATCHING
+    ==================================================== -->
+
+    <section id="fingerprints">
+
+      <div class="section-header reveal">
+
+        <div class="eyebrow">
+          Part 03
+        </div>
+
+        <h2>
+          Fingerprint Matching
+        </h2>
+
+        <p>
+          A fingerprint can be converted from an image into
+          a set of important locations called minutiae.
+        </p>
+
+      </div>
+
+
+      <!-- Minutiae -->
+
+      <div class="two-col">
+
+        <div class="card reveal">
+
+          <h3>
+            What is a minutia?
+          </h3>
+
+          <p>
+            A minutia is an important point in a fingerprint,
+            such as where a ridge ends or where two ridges
+            merge.
+          </p>
+
+          <div class="formula">
+            Ridge ending<br>
+            Ridge merging<br>
+            Ridge splitting
+          </div>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <h3>
+            Turn the fingerprint into a set
+          </h3>
+
+          <p>
+            Divide the fingerprint into grid squares.
+            A square containing a minutia becomes part of
+            the set.
+          </p>
+
+          <div class="formula">
+            Fingerprint → Grid → Minutiae → Set
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Interactive fingerprint -->
+
+      <div
+        class="demo reveal"
+        style="margin-top:25px"
+      >
+
+        <h3>
+          Interactive Fingerprint Grid
+        </h3>
+
+        <p>
+          Click grid cells to add or remove minutiae.
+        </p>
+
+
+        <div
+          id="fingerprint"
+          class="fingerprint"
+          data-size="8"
+        ></div>
+
+
+        <p>
+          Fingerprint A:
+        </p>
+
+        <div
+          id="fingerprintSet"
+          class="formula"
+        >
+          { }
+        </div>
+
+      </div>
+
+
+      <!-- Compare two fingerprints -->
+
+      <div
+        class="two-col"
+        style="margin-top:25px"
+      >
+
+        <div class="demo reveal">
+
+          <h3>
+            Fingerprint A
+          </h3>
+
+          <div
+            id="fingerprint"
+            class="fingerprint"
+            data-size="8"
+          ></div>
+
+        </div>
+
+
+        <div class="demo reveal">
+
+          <h3>
+            Fingerprint B
+          </h3>
+
+          <div
+            id="fingerprint2"
+            class="fingerprint"
+            data-size="8"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Jaccard -->
+
+      <div
+        class="demo reveal"
+        style="margin-top:25px"
+      >
+
+        <h3>
+          Jaccard Similarity
+        </h3>
+
+        <p>
+          Once the fingerprints are represented as sets,
+          we can compare them using Jaccard similarity.
+        </p>
+
+
+        <div class="formula">
+
+          J(A,B) =
+          |A ∩ B| / |A ∪ B|
+
+        </div>
+
+
+        <div
+          style="
+            margin:25px 0;
+            font-size:3rem;
+            font-weight:800;
+            color:#39e1ff;
+          "
+        >
+
+          <span id="jaccardValue">
+            0.00
+          </span>
+
+        </div>
+
+
+        <div
+          style="
+            height:10px;
+            background:rgba(255,255,255,.07);
+            border-radius:10px;
+            overflow:hidden;
+          "
+        >
+
+          <div
+            id="jaccardBar"
+            style="
+              width:0%;
+              height:100%;
+              background:linear-gradient(
+                90deg,
+                #39e1ff,
+                #9b7cff
+              );
+              transition:width .5s ease;
+            "
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- MinHash / LSH -->
+
+      <div
+        class="demo reveal"
+        style="margin-top:25px"
+      >
+
+        <div class="eyebrow">
+          LSH for Jaccard Similarity
+        </div>
+
+        <h3>
+          From Fingerprint Sets to LSH
+        </h3>
+
+        <p>
+          Comparing every fingerprint with every other
+          fingerprint would again be extremely expensive.
+          LSH lets us find likely similar fingerprints first.
+        </p>
+
+
+        <div class="pipeline">
+
+          <div class="pipeline-step">
+            Grid
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Set
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            MinHash
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Candidate
+          </div>
+
+        </div>
+
+
+        <div
+          id="minhashOutput"
+          class="big-number"
+          style="
+            font-size:2rem;
+            color:#9b7cff;
+          "
+        >
+          Ready
+        </div>
+
+
+        <p id="minhashExplanation">
+          Click Next Step to see how LSH can be used with
+          Jaccard similarity.
+        </p>
+
+
+        <button
+          id="nextMinhash"
+          class="btn"
+        >
+          Next Step
+        </button>
+
+      </div>
+
+
+      <!-- Final takeaway -->
+
+      <div
+        class="card reveal"
+        style="
+          margin-top:35px;
+          text-align:center;
+        "
+      >
+
+        <div class="eyebrow">
+          The Big Picture
+        </div>
+
+        <h2>
+          Don't compare everything.
+          Find what is worth comparing.
+        </h2>
+
+        <p>
+          Locality Sensitive Hashing reduces a huge similarity
+          search problem into a much smaller candidate-search
+          problem.
+        </p>
+
+        <div class="pipeline">
+
+          <div class="pipeline-step">
+            Huge Dataset
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            LSH
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Candidate Pairs
+          </div>
+
+          <div class="pipeline-arrow">
+            →
+          </div>
+
+          <div class="pipeline-step">
+            Detailed Comparison
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>

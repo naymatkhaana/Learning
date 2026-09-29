@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Locality-Sensitive Hashing — MinHash & LSH</title>
+
+  <meta
+    name="description"
+    content="An interactive tutorial on MinHash, locality-sensitive hashing, LSH bands, buckets, and the S-curve."
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- =====================================================
+       NAVIGATION
+       ===================================================== -->
+
+  <nav class="tutorial-nav">
+    <div class="container">
+
+      <a href="#intro">Overview</a>
+      <a href="#lsh">LSH</a>
+      <a href="#minhash">MinHash</a>
+      <a href="#signature">Signature</a>
+      <a href="#buckets">Buckets</a>
+      <a href="#probability">Probability</a>
+      <a href="#curve">S-Curve</a>
+      <a href="#summary">Summary</a>
+
+    </div>
+  </nav>
+
+
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
+
+  <header class="hero" id="intro">
+
+    <div class="container">
+
+      <div class="reveal">
+
+        <p class="highlight">
+          MACHINE LEARNING · INFORMATION RETRIEVAL
+        </p>
+
+        <h1>
+          Locality-Sensitive Hashing
+          <br />
+          for Documents
+        </h1>
+
+        <p>
+          From enormous numbers of document pairs to a tiny set of
+          promising candidates — using MinHash signatures, bands,
+          buckets, and probability.
+        </p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- =====================================================
+         PART 1 — THE PROBLEM
+         ===================================================== -->
+
+    <section id="problem">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 01 · THE PROBLEM
+          </p>
+
+          <h2>
+            Why MinHash alone isn't enough
+          </h2>
+
+          <p>
+            MinHash compresses documents into small signatures while
+            preserving their expected Jaccard similarity. But finding
+            the most similar pairs can still be expensive.
+          </p>
+
+        </div>
+
+
+        <div class="grid grid-2">
+
+          <div class="card reveal">
+
+            <h3>
+              The quadratic problem
+            </h3>
+
+            <p>
+              Suppose we have \(n\) documents. The number of possible
+              document pairs is:
+            </p>
+
+            <div class="formula">
+              \[
+              \frac{n(n-1)}{2}
+              \]
+            </div>
+
+            <p>
+              Even a relatively modest collection can produce an
+              enormous number of pairs.
+            </p>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              The goal of LSH
+            </h3>
+
+            <p>
+              We don't want to compare every possible pair. Instead,
+              we want to identify pairs that are <span class="highlight">
+              likely to be similar
+              </span>.
+            </p>
+
+            <div class="callout">
+
+              <strong>
+                Key idea
+              </strong>
+
+              <br />
+
+              Hash similar objects into the same buckets with high
+              probability, while making collisions between dissimilar
+              objects unlikely.
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 2 — LSH CONCEPT
+         ===================================================== -->
+
+    <section id="lsh">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 02 · LOCALITY-SENSITIVE HASHING
+          </p>
+
+          <h2>
+            What makes a hash function "locality-sensitive"?
+          </h2>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <p>
+            A locality-sensitive hash function is designed so that
+            similar objects are more likely to collide than dissimilar
+            objects.
+          </p>
+
+          <div class="formula">
+
+            \[
+            \text{similar}(x,y)
+            \Rightarrow
+            P[h(x)=h(y)]
+            \text{ is high}
+            \]
+
+          </div>
+
+          <div class="formula">
+
+            \[
+            \text{dissimilar}(x,y)
+            \Rightarrow
+            P[h(x)=h(y)]
+            \text{ is low}
+            \]
+
+          </div>
+
+        </div>
+
+
+        <div class="grid grid-2" style="margin-top:22px;">
+
+          <div class="card reveal">
+
+            <h3>
+              Ordinary hashing
+            </h3>
+
+            <p>
+              A conventional hash function tries to distribute inputs
+              uniformly. Similar inputs do not need to remain close.
+            </p>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Locality-sensitive hashing
+            </h3>
+
+            <p>
+              LSH deliberately makes the collision probability depend
+              on similarity.
+            </p>
+
+            <div class="callout success">
+
+              Similarity becomes a signal for collision probability.
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 3 — MINHASH
+         ===================================================== -->
+
+    <section id="minhash">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 03 · MINHASH
+          </p>
+
+          <h2>
+            MinHash is locality-sensitive for Jaccard similarity
+          </h2>
+
+          <p>
+            MinHash gives us a compact signature while preserving
+            an important property of set similarity.
+          </p>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <h3>
+            The key property
+          </h3>
+
+          <div class="formula">
+
+            \[
+            P[h(A)=h(B)]
+            =
+            J(A,B)
+            \]
+
+          </div>
+
+          <p>
+            The probability that two sets receive the same MinHash
+            value is exactly their Jaccard similarity.
+          </p>
+
+        </div>
+
+
+        <!-- Interactive Jaccard demo -->
+
+        <div class="card reveal" style="margin-top:22px;">
+
+          <h3>
+            Interactive Jaccard similarity
+          </h3>
+
+          <p>
+            Change the sets below and observe how their Jaccard
+            similarity — and expected MinHash collision probability —
+            changes.
+          </p>
+
+
+          <div class="grid grid-2">
+
+            <div>
+
+              <label for="setA">
+                Document A shingles
+              </label>
+
+              <input
+                id="setA"
+                type="text"
+                value="cat,dog,house,tree,car"
+                style="width:100%; margin-top:8px;"
+              />
+
+            </div>
+
+
+            <div>
+
+              <label for="setB">
+                Document B shingles
+              </label>
+
+              <input
+                id="setB"
+                type="text"
+                value="cat,dog,house,tree,book"
+                style="width:100%; margin-top:8px;"
+              />
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="grid grid-2"
+            style="margin-top:25px;"
+          >
+
+            <div class="callout">
+
+              <div>
+                Jaccard similarity
+              </div>
+
+              <div
+                id="jaccardValue"
+                class="probability-value"
+              >
+                0%
+              </div>
+
+            </div>
+
+
+            <div class="callout success">
+
+              <div>
+                Expected MinHash collision
+              </div>
+
+              <div
+                id="minhashValue"
+                class="probability-value"
+              >
+                0%
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 4 — MINHASH SIGNATURE
+         ===================================================== -->
+
+    <section id="signature">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 04 · SIGNATURES
+          </p>
+
+          <h2>
+            From documents to MinHash signatures
+          </h2>
+
+          <p>
+            Instead of comparing enormous sets of shingles directly,
+            we represent every document using a compact signature.
+          </p>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <p>
+            Imagine four documents. Each column represents a document,
+            while each row represents one MinHash function.
+          </p>
+
+          <div class="formula">
+
+            \[
+            \text{Signature}
+            =
+            \begin{bmatrix}
+            h_1(D_1) & h_1(D_2) & h_1(D_3) & h_1(D_4) \\
+            h_2(D_1) & h_2(D_2) & h_2(D_3) & h_2(D_4) \\
+            \vdots & \vdots & \vdots & \vdots \\
+            h_{12}(D_1) & h_{12}(D_2) & h_{12}(D_3) & h_{12}(D_4)
+            \end{bmatrix}
+            \]
+
+          </div>
+
+        </div>
+
+
+        <div class="card reveal" style="margin-top:22px;">
+
+          <h3>
+            12-row MinHash signature matrix
+          </h3>
+
+          <p>
+            D1 and D2 are deliberately constructed to have similar
+            signatures. Watch what happens when we divide the matrix
+            into bands.
+          </p>
+
+
+          <div class="matrix-wrapper">
+
+            <table
+              id="signatureMatrix"
+              class="signature-matrix"
+            >
+            </table>
+
+          </div>
+
+
+          <div class="grid grid-3" style="margin-top:20px;">
+
+            <div class="callout">
+              <strong>Band 1</strong>
+              <br />
+              Rows 1–4
+            </div>
+
+            <div class="callout">
+              <strong>Band 2</strong>
+              <br />
+              Rows 5–8
+            </div>
+
+            <div class="callout">
+              <strong>Band 3</strong>
+              <br />
+              Rows 9–12
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 5 — BANDS AND BUCKETS
+         ===================================================== -->
+
+    <section id="buckets">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 05 · BANDS & BUCKETS
+          </p>
+
+          <h2>
+            How LSH creates candidate pairs
+          </h2>
+
+          <p>
+            Each signature is divided into bands. Each band is hashed
+            independently into a bucket.
+          </p>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <h3>
+            The banding strategy
+          </h3>
+
+          <div class="formula">
+
+            \[
+            \boxed{
+            b=\text{number of bands}
+            }
+            \qquad
+            \boxed{
+            r=\text{rows per band}
+            }
+            \]
+
+          </div>
+
+          <p>
+            With 12 signature rows, one possible configuration is:
+          </p>
+
+          <div class="formula">
+
+            \[
+            12 = 3 \times 4
+            \]
+
+            <br />
+
+            <strong>
+              3 bands × 4 rows per band
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- Interactive bucket simulator -->
+
+        <div class="card reveal" style="margin-top:22px;">
+
+          <h3>
+            Interactive LSH bucket simulator
+          </h3>
+
+          <p>
+            Change the number of bands and rows per band. Each band
+            hashes the corresponding portion of the signature into
+            buckets.
+          </p>
+
+
+          <div class="controls">
+
+            <div class="control-group">
+
+              <label for="bands">
+                Bands
+              </label>
+
+              <input
+                id="bands"
+                type="range"
+                min="1"
+                max="6"
+                value="3"
+              />
+
+              <span id="bandsValue">
+                3
+              </span>
+
+            </div>
+
+
+            <div class="control-group">
+
+              <label for="rowsPerBand">
+                Rows / band
+              </label>
+
+              <input
+                id="rowsPerBand"
+                type="range"
+                min="1"
+                max="8"
+                value="4"
+              />
+
+              <span id="rowsValue">
+                4
+              </span>
+
+            </div>
+
+
+            <button id="runLSH">
+              Run LSH
+            </button>
+
+            <button
+              id="resetLSH"
+              class="secondary"
+            >
+              Reset
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="bucketGrid"
+          class="bucket-grid"
+          style="margin-top:22px;"
+        >
+        </div>
+
+
+        <div
+          class="callout success reveal"
+          style="margin-top:22px;"
+        >
+
+          <strong>
+            Candidate rule
+          </strong>
+
+          <br />
+
+          Two documents become a candidate pair if they land in the
+          same bucket in <strong>at least one band</strong>.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 6 — PROBABILITY ANALYSIS
+         ===================================================== -->
+
+    <section id="probability">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 06 · PROBABILITY
+          </p>
+
+          <h2>
+            Why the banding strategy works
+          </h2>
+
+          <p>
+            The magic of LSH comes from the probability that a pair
+            agrees completely inside at least one band.
+          </p>
+
+        </div>
+
+
+        <div class="grid grid-2">
+
+          <div class="card reveal">
+
+            <h3>
+              Step 1 — One band
+            </h3>
+
+            <p>
+              Suppose two documents have similarity \(s\).
+              The probability that they agree in all \(r\) rows
+              of one band is:
+            </p>
+
+            <div class="formula">
+
+              \[
+              s^r
+              \]
+
+            </div>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Step 2 — One band fails
+            </h3>
+
+            <p>
+              Therefore, the probability that they disagree in at
+              least one row of the band is:
+            </p>
+
+            <div class="formula">
+
+              \[
+              1-s^r
+              \]
+
+            </div>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Step 3 — All bands fail
+            </h3>
+
+            <p>
+              If there are \(b\) independent bands, the probability
+              that every band fails is:
+            </p>
+
+            <div class="formula">
+
+              \[
+              (1-s^r)^b
+              \]
+
+            </div>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Step 4 — Candidate probability
+            </h3>
+
+            <p>
+              Therefore, the probability that the pair agrees in all
+              rows of at least one band is:
+            </p>
+
+            <div class="formula">
+
+              \[
+              \boxed{
+              1-(1-s^r)^b
+              }
+              \]
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="callout warning reveal"
+          style="margin-top:25px;"
+        >
+
+          <strong>
+            Important
+          </strong>
+
+          <br />
+
+          LSH does not say that similar documents are guaranteed to
+          collide. It changes the probability of collision so that
+          highly similar pairs are much more likely to become
+          candidates.
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 7 — S CURVE
+         ===================================================== -->
+
+    <section id="curve">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 07 · THE S-CURVE
+          </p>
+
+          <h2>
+            The probability transition
+          </h2>
+
+          <p>
+            The candidate probability
+            \(1-(1-s^r)^b\) produces the characteristic S-shaped
+            curve.
+          </p>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <div class="controls">
+
+            <div class="control-group">
+
+              <label for="curveBands">
+                Bands \(b\)
+              </label>
+
+              <input
+                id="curveBands"
+                type="range"
+                min="1"
+                max="20"
+                value="3"
+              />
+
+              <span id="curveBandsValue">
+                3
+              </span>
+
+            </div>
+
+
+            <div class="control-group">
+
+              <label for="curveRows">
+                Rows / band \(r\)
+              </label>
+
+              <input
+                id="curveRows"
+                type="range"
+                min="1"
+                max="12"
+                value="4"
+              />
+
+              <span id="curveRowsValue">
+                4
+              </span>
+
+            </div>
+
+
+            <div class="callout">
+
+              Approximate threshold:
+
+              <strong
+                id="thresholdValue"
+                class="highlight"
+              >
+                0.760
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="chart-container reveal"
+          style="margin-top:22px;"
+        >
+
+          <svg
+            id="sCurve"
+            class="chart"
+            viewBox="0 0 800 380"
+            preserveAspectRatio="none"
+            aria-label="LSH S-curve"
+          >
+          </svg>
+
+        </div>
+
+
+        <div class="card reveal" style="margin-top:22px;">
+
+          <h3>
+            Approximate threshold
+          </h3>
+
+          <div class="formula">
+
+            \[
+            \boxed{
+            t \approx
+            \left(\frac{1}{b}\right)^{1/r}
+            }
+            \]
+
+          </div>
+
+          <p>
+            Around this similarity level, the candidate probability
+            rises rapidly. Increasing the number of bands generally
+            makes more pairs candidates, while increasing the number
+            of rows per band makes collisions more selective.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 8 — INTUITION
+         ===================================================== -->
+
+    <section id="intuition">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            PART 08 · INTUITION
+          </p>
+
+          <h2>
+            Why "any band" matters
+          </h2>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <p>
+            Imagine two highly similar documents. Their MinHash
+            signatures will agree frequently.
+          </p>
+
+          <p>
+            Dividing the signature into bands gives them many
+            opportunities to match completely within one band.
+          </p>
+
+
+          <div class="formula">
+
+            \[
+            \text{High similarity}
+            \Rightarrow
+            \text{high chance of a complete band match}
+            \]
+
+          </div>
+
+
+          <p>
+            Meanwhile, a dissimilar pair is unlikely to match in all
+            rows of even one band.
+          </p>
+
+          <div class="formula">
+
+            \[
+            \text{Low similarity}
+            \Rightarrow
+            \text{low chance of becoming a candidate}
+            \]
+
+          </div>
+
+        </div>
+
+
+        <div class="grid grid-3" style="margin-top:22px;">
+
+          <div class="card reveal">
+
+            <h3>
+              MinHash
+            </h3>
+
+            <p>
+              Compresses sets into signatures while preserving
+              expected Jaccard similarity.
+            </p>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Bands
+            </h3>
+
+            <p>
+              Create multiple independent opportunities for similar
+              signatures to match.
+            </p>
+
+          </div>
+
+
+          <div class="card reveal">
+
+            <h3>
+              Buckets
+            </h3>
+
+            <p>
+              Turn matching bands into candidate pairs that deserve
+              further comparison.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PART 9 — SUMMARY
+         ===================================================== -->
+
+    <section id="summary">
+
+      <div class="container">
+
+        <div class="section-title reveal">
+
+          <p class="highlight">
+            FINAL TAKEAWAY
+          </p>
+
+          <h2>
+            From millions of pairs to a small candidate set
+          </h2>
+
+        </div>
+
+
+        <div class="card reveal">
+
+          <div class="formula">
+
+            \[
+            \text{Documents}
+            \rightarrow
+            \text{Shingles}
+            \rightarrow
+            \text{MinHash signatures}
+            \rightarrow
+            \text{Bands}
+            \rightarrow
+            \text{Buckets}
+            \rightarrow
+            \text{Candidate pairs}
+            \]
+
+          </div>
+
+
+          <div class="grid grid-3">
+
+            <div class="callout">
+
+              <strong>
+                1 · MinHash
+              </strong>
+
+              <br />
+
+              Preserves Jaccard similarity probabilistically.
+
+            </div>
+
+
+            <div class="callout">
+
+              <strong>
+                2 · LSH
+              </strong>
+
+              <br />
+
+              Focuses computation on likely similar pairs.
+
+            </div>
+
+
+            <div class="callout success">
+
+              <strong>
+                3 · Candidate pairs
+              </strong>
+
+              <br />
+
+              Only promising pairs need expensive comparison.
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="callout warning reveal"
+          style="margin-top:25px;"
+        >
+
+          <strong>
+            Remember the core equation:
+          </strong>
+
+          <div class="formula">
+
+            \[
+            \boxed{
+            P(\text{candidate})
+            =
+            1-(1-s^r)^b
+            }
+            \]
+
+          </div>
+
+          Similarity \(s\), bands \(b\), and rows per band \(r\)
+          together determine the probability that two documents
+          become an LSH candidate pair.
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer style="padding:50px 0; text-align:center; color:var(--muted);">
+
+    <div class="container">
+
+      <p>
+        Interactive tutorial · MinHash · Locality-Sensitive Hashing
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       MATHJAX
+       ===================================================== -->
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [
+          ["\\(", "\\)"]
+        ],
+        displayMath: [
+          ["\\[", "\\]"]
+        ]
+      },
+      svg: {
+        fontCache: "global"
+      }
+    };
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    defer>
+  </script>
+
+
+  <!-- =====================================================
+       INTERACTIVE JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+</body>
+</html>

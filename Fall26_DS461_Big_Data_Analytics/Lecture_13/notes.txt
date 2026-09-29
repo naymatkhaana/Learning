@@ -1,0 +1,36 @@
+Want to design tutorial on locality sensitive hashing. Write html and javascript code for this. The tutorial should be very modern, stylish, high end. highlight and add animations where appropriate. make it interactive where appropriate.
+
+Distance measures
+
+A distance measure on this
+space is a function d(x, y) that takes two points in the space as arguments and
+produces a real number, and satisfies the following axioms:
+1. d(x, y) ≥ 0 (no negative distances).
+2. d(x, y) = 0 if and only if x = y (distances are positive, except for the
+distance from a point to itself).
+3. d(x, y) = d(y, x) (distance is symmetric).
+4. d(x, y) ≤ d(x, z) + d(z, y) (the triangle inequality).
+
+Euclidean distance with formula and example.
+
+Jaccard distance with formula and example.
+
+Cosine distance with formula and example.
+
+Edit Distance with formula and example.
+
+Hamming distance with formula and example.
+
+LSH for cosine distance
+code for animation with example of simhash/ random hyperplanes with plot. e.g. have multiple points on a plot. and when user selects next, that add a random hyperplane
+then plot shows the normal vector and hyperplane and mention the hash value of each point w.r.t that hyperplane
+and when user selects next, that add a random hyperplane
+then plot shows the normal vector and hyperplane and mention the hash value of each point w.r.t that hyperplane
+and so on.
+
+LSH for hamming distance
+code for animation with next 
+
+Write javascript script.js, html, and style.css for this. divide html into three parts.
+now write style.css only. it does not have to be very long.
+

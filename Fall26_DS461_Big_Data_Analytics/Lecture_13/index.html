@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Locality Sensitive Hashing — Interactive Tutorial</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    }
+  };
+</script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</head>
+
+<body>
+
+  <div class="progress"></div>
+
+  <!-- Navigation -->
+  <nav class="top-nav">
+    <a href="#distances">Distances</a>
+    <a href="#cosine-lsh">Cosine LSH</a>
+    <a href="#hamming-lsh">Hamming LSH</a>
+  </nav>
+
+  <!-- =========================================================
+       PART 1 — DISTANCE MEASURES
+       ========================================================= -->
+
+  <section id="distances">
+    <div class="container">
+
+      <div class="hero">
+        <div class="hero-content">
+          <span class="badge">INTERACTIVE MACHINE LEARNING TUTORIAL</span>
+
+          <h1>Locality Sensitive Hashing</h1>
+
+          <p class="hero-subtitle">
+            Understand distance measures, similarity, random projections,
+            SimHash, and how LSH finds similar objects efficiently.
+          </p>
+        </div>
+      </div>
+
+      <div class="section-header reveal">
+        <span class="section-label">01 · Foundations</span>
+        <h2>Distance Measures</h2>
+
+        <p>
+          A distance measure is a function
+          <strong>d(x, y)</strong> that tells us how far apart two points
+          are in a space.
+        </p>
+      </div>
+
+      <div class="axioms reveal">
+
+        <div class="axiom">
+          <span class="axiom-number">1</span>
+          <div>
+            <strong>Non-negativity</strong>
+            <p>d(x, y) ≥ 0</p>
+          </div>
+        </div>
+
+        <div class="axiom">
+          <span class="axiom-number">2</span>
+          <div>
+            <strong>Identity</strong>
+            <p>d(x, y) = 0 if and only if x = y</p>
+          </div>
+        </div>
+
+        <div class="axiom">
+          <span class="axiom-number">3</span>
+          <div>
+            <strong>Symmetry</strong>
+            <p>d(x, y) = d(y, x)</p>
+          </div>
+        </div>
+
+        <div class="axiom">
+          <span class="axiom-number">4</span>
+          <div>
+            <strong>Triangle inequality</strong>
+            <p>d(x, y) ≤ d(x, z) + d(z, y)</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-grid" style="margin-top:30px">
+
+        <!-- Euclidean -->
+        <article class="card measure-card reveal">
+          <div class="icon">L₂</div>
+          <h3>Euclidean Distance</h3>
+
+          <p>
+            The ordinary straight-line distance between two vectors.
+          </p>
+
+<div class="formula">
+  \[
+    d(\mathbf{x},\mathbf{y})
+    =
+    \sqrt{\sum_{i=1}^{n}(x_i-y_i)^2}
+  \]
+</div>
+
+
+          <p>
+            Example:
+            <br>
+            a = (1, 2), b = (4, 6)
+            <br>
+            d(a,b) = √(3² + 4²) = <strong>5</strong>
+          </p>
+        </article>
+
+        <!-- Jaccard -->
+        <article class="card measure-card reveal">
+          <div class="icon">J</div>
+          <h3>Jaccard Distance</h3>
+
+          <p>
+            Useful when comparing sets.
+          </p>
+
+<div class="formula">
+  \[
+    d_J(A,B)
+    =
+    1-\frac{|A\cap B|}{|A\cup B|}
+  \]
+</div>
+
+
+          <p>
+            A = {1,2,3}
+            <br>
+            B = {2,3,4}
+            <br>
+            Jaccard distance = 1 − 2/4 = <strong>0.5</strong>
+          </p>
+        </article>
+
+        <!-- Cosine -->
+        <article class="card measure-card reveal">
+          <div class="icon">θ</div>
+          <h3>Cosine Distance</h3>
+
+          <p>
+            Measures the difference in direction between vectors.
+          </p>
+<div class="formula">
+  \[
+    d_{\cos}(\mathbf{x},\mathbf{y})
+    =
+    1-
+    \frac{\mathbf{x}\cdot\mathbf{y}}
+    {\|\mathbf{x}\|\|\mathbf{y}\|}
+  \]
+</div>
+
+          <p>
+            Same direction → distance <strong>0</strong>.
+            <br>
+            Perpendicular → distance <strong>1</strong>.
+          </p>
+        </article>
+
+        <!-- Edit -->
+        <article class="card measure-card reveal">
+          <div class="icon">ED</div>
+          <h3>Edit Distance</h3>
+
+          <p>
+            Minimum number of insertions, deletions, and substitutions
+            needed to transform one string into another.
+          </p>
+
+
+<div class="formula">
+  \[
+  D(i,j)=
+  \begin{cases}
+    i, & j=0\\
+    j, & i=0\\
+    \min
+    \begin{cases}
+      D(i-1,j)+1\\
+      D(i,j-1)+1\\
+      D(i-1,j-1)+[x_i\neq y_j]
+    \end{cases},
+    & \text{otherwise}
+  \end{cases}
+  \]
+
+</div>
+
+
+          <p> d("cat","cut") = 1
+            Only one substitution is required:
+            <strong>a → u</strong>.
+          </p>
+        </article>
+
+        <!-- Hamming -->
+        <article class="card measure-card reveal">
+          <div class="icon">H</div>
+          <h3>Hamming Distance</h3>
+
+          <p>
+            Counts positions where two equal-length strings differ.
+          </p>
+
+<div class="formula">
+  \[
+    d_H(\mathbf{x},\mathbf{y})
+    =
+    \sum_{i=1}^{n}
+    \mathbf{1}[x_i\neq y_i]
+  \]
+</div>
+
+
+          <p>
+            101101 vs 100001
+            <br>
+            Hamming distance = <strong>2</strong>
+          </p>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- =========================================================
+       PART 2 — COSINE LSH / SIMHASH
+       ========================================================= -->
+
+  <section id="cosine-lsh">
+    <div class="container">
+
+      <div class="section-header reveal">
+        <span class="section-label">02 · Cosine Similarity</span>
+
+        <h2>LSH for Cosine Distance</h2>
+
+        <p>
+          Random Hyperplane LSH, commonly used in SimHash,
+          converts the position of a vector relative to a random
+          hyperplane into a binary hash value.
+        </p>
+      </div>
+
+<div class="card reveal">
+
+  <h3>Random Hyperplane LSH</h3>
+
+  <p>
+    Choose a random vector
+    \(\mathbf{r}\), which is the normal vector of the hyperplane.
+    The hyperplane is defined by:
+  </p>
+
+  <div class="formula">
+    \[
+      \mathbf{r}^{\top}\mathbf{x}=0
+    \]
+  </div>
+
+  <p>
+    The hash is determined by which side of the hyperplane
+    the vector \(\mathbf{x}\) lies on:
+  </p>
+
+  <div class="formula">
+    \[
+      h_{\mathbf r}(\mathbf x)
+      =
+      \operatorname{sign}
+      \left(\mathbf r^{\top}\mathbf x\right)
+      =
+      \begin{cases}
+        +1, & \mathbf r^{\top}\mathbf x \geq 0 \\[4pt]
+        -1, & \mathbf r^{\top}\mathbf x < 0
+      \end{cases}
+    \]
+  </div>
+
+  <p>
+    Thus, the dot product with the normal vector determines
+    the side of the hyperplane.
+  </p>
+
+</div>
+
+
+      <div class="lsh-demo" style="margin-top:24px">
+
+        <div class="card plot-card reveal">
+
+          <canvas id="lshCanvas" height="500"></canvas>
+
+          <div class="controls">
+            <button class="btn" id="nextHyperplane">
+              Next Hyperplane
+            </button>
+
+            <button class="btn secondary" id="resetLSH">
+              Reset
+            </button>
+          </div>
+
+        </div>
+
+        <div class="demo-panel">
+
+          <div class="card demo-step active">
+            <span class="section-label">SIMHASH</span>
+
+            <h3>Watch the hash form</h3>
+
+            <p>
+              Every time you add a hyperplane, each point receives
+              a binary hash value depending on which side of the
+              hyperplane it lies.
+            </p>
+          </div>
+
+          <div class="card">
+
+            <h3>Hash Values</h3>
+
+            <div id="hashValues" class="hash-list">
+              <div class="demo-step">
+                Press <strong>Next Hyperplane</strong> to begin.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card reveal" style="margin-top:24px">
+
+        <h3>Why does this work?</h3>
+
+        <p>
+          Vectors pointing in similar directions are likely to fall
+          on the same side of a random hyperplane. Therefore they
+          are likely to receive the same hash bit.
+        </p>
+
+        <!-- <div class="formula">
+          P[h(a) = h(b)] = 1 − θ/π
+        </div> -->
+
+        <p>
+          where θ is the angle between the two vectors.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- =========================================================
+       PART 3 — HAMMING LSH
+       ========================================================= -->
+
+  <section id="hamming-lsh">
+    <div class="container">
+
+      <div class="section-header reveal">
+
+        <span class="section-label">03 · Binary Vectors</span>
+
+        <h2>LSH for Hamming Distance</h2>
+
+        <p>
+          For binary vectors, a simple LSH strategy is to randomly
+          select a bit position and use that bit as the hash value.
+        </p>
+
+      </div>
+
+      <div class="card reveal">
+
+        <h3>Random Bit Sampling</h3>
+
+        <p>
+          Consider these binary vectors:
+        </p>
+
+        <div class="formula">
+          <!--10110110<br>
+          10100110<br>
+          10000110<br>
+          11100101 !-->
+
+<div class="hamming-row">
+    <span class="hamming-value">10110110</span>
+    <span class="hamming-hash">-</span>
+</div>
+
+<div class="hamming-row">
+    <span class="hamming-value">10100110</span>
+    <span class="hamming-hash">-</span>
+</div>
+
+<div class="hamming-row">
+    <span class="hamming-value">10000110</span>
+    <span class="hamming-hash">-</span>
+</div>
+
+<div class="hamming-row">
+    <span class="hamming-value">11100101</span>
+    <span class="hamming-hash">-</span>
+</div>
+
+        </div>
+
+        <p>
+          At each step, LSH randomly chooses one bit position.
+          Vectors having the same value at that position fall
+          into the same bucket.
+        </p>
+
+        <div class="controls">
+          <button class="btn" id="nextHamming">
+            Next Bit
+          </button>
+        </div>
+
+        <div
+          id="hammingExplanation"
+          class="demo-step"
+          style="margin-top:18px"
+        >
+          Select <strong>Next Bit</strong> to begin the animation.
+        </div>
+
+      </div>
+
+      <div class="card-grid" style="margin-top:24px">
+
+        <div class="card reveal">
+          <h3>Why random bits?</h3>
+          <p>
+            Two binary vectors that differ in only a few positions
+            have a high probability of agreeing on a randomly
+            selected bit.
+          </p>
+        </div>
+
+        <div class="card reveal">
+          <h3>Key idea</h3>
+
+          <div class="formula">
+            h(x) = xᵢ
+          </div>
+
+          <p>
+            Pick a random coordinate i and use its binary value
+            as the hash.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <footer style="padding:50px 0;text-align:center;color:#64748b">
+    Interactive LSH Tutorial · Distance → Hashing → Approximate Search
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

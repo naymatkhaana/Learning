@@ -1,0 +1,10 @@
+Want to design tutorial on locality sensitive hashing applications. Write html and javascript code for this. The tutorial should be very modern, stylish, high end. highlight and add animations where appropriate. make it interactive where appropriate.
+
+What is entity resolution. give example of a person name and information in two databases. ask students if they are same or not.
+
+give that example where two companies A and B with 1,000,000 customers each. and each requires 1 trillion pairs. we hash name, then phone, then address
+
+give example of fingerprint matching. where we divide fingerprint into grids. each grid may have minutiae or not. then we can prepare set and then do LSH for jaccard similarity.
+
+Write javascript script.js, html, and style.css for this. divide html into three parts.
+now write style.css only. it does not have to be very long.

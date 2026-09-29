@@ -1,0 +1,690 @@
+/* =========================================================
+   LOCALITY SENSITIVE HASHING — TUTORIAL STYLES
+========================================================= */
+
+:root {
+  --bg: #070b14;
+  --panel: #0d1422;
+  --panel-2: #111b2d;
+  --border: rgba(255,255,255,.09);
+
+  --text: #edf4ff;
+  --muted: #8fa0b8;
+
+  --blue: #55a8ff;
+  --cyan: #39e1ff;
+  --purple: #9b7cff;
+  --orange: #ffb454;
+  --green: #42e6a4;
+  --red: #ff5f7e;
+
+  --shadow:
+    0 20px 70px rgba(0,0,0,.35);
+
+  --radius: 18px;
+}
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(85,168,255,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(155,124,255,.10),
+      transparent 28%
+    ),
+    var(--bg);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+
+/* =========================================================
+   TOP NAVIGATION
+========================================================= */
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+
+  padding: 15px 24px;
+
+  background: rgba(7,11,20,.72);
+  border-bottom: 1px solid var(--border);
+
+  backdrop-filter: blur(18px);
+}
+
+.top-nav a {
+  color: var(--muted);
+  font-size: .88rem;
+  transition: .25s ease;
+}
+
+.top-nav a:hover,
+.top-nav a.active {
+  color: var(--text);
+}
+
+.top-nav a.active {
+  text-shadow: 0 0 20px rgba(85,168,255,.7);
+}
+
+
+/* =========================================================
+   SCROLL PROGRESS
+========================================================= */
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  width: 0;
+  height: 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      var(--blue),
+      var(--purple)
+    );
+
+  box-shadow:
+    0 0 15px var(--cyan);
+
+  transition: width .1s linear;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+main {
+  width: min(1120px, 92%);
+  margin: auto;
+}
+
+section {
+  padding: 110px 0;
+}
+
+.section-header {
+  max-width: 760px;
+  margin-bottom: 45px;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  letter-spacing: -.035em;
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, 6rem);
+  margin: 18px 0;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  margin: 12px 0;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  color: var(--muted);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  min-height: 82vh;
+
+  display: grid;
+  place-items: center;
+
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 900px;
+}
+
+.hero h1 {
+  background:
+    linear-gradient(
+      100deg,
+      #fff,
+      #8fdcff 45%,
+      #aa8cff
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 25px auto;
+  font-size: 1.1rem;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card,
+.demo {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.015)
+    );
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  box-shadow: var(--shadow);
+}
+
+.card {
+  padding: 28px;
+}
+
+.demo {
+  padding: 28px;
+  margin-top: 30px;
+}
+
+.card:hover {
+  border-color: rgba(85,168,255,.25);
+}
+
+
+/* =========================================================
+   GRIDS
+========================================================= */
+
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+
+/* =========================================================
+   RECORD / ENTITY RESOLUTION
+========================================================= */
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.record {
+  padding: 22px;
+  border-radius: 14px;
+
+  background: #0a111e;
+  border: 1px solid var(--border);
+
+  transition: .3s ease;
+}
+
+.record:hover {
+  transform: translateY(-4px);
+  border-color: rgba(85,168,255,.4);
+}
+
+.record-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.record-row:last-child {
+  border-bottom: 0;
+}
+
+.record-label {
+  color: var(--muted);
+}
+
+.record-value {
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 11px 18px;
+  border-radius: 10px;
+
+  color: white;
+  background: linear-gradient(
+    135deg,
+    #258cff,
+    #7157ff
+  );
+
+  border: 0;
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 25px rgba(85,168,255,.22);
+
+  transition: .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 32px rgba(85,168,255,.32);
+}
+
+.btn.secondary {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   ANSWERS / FEEDBACK
+========================================================= */
+
+.answer {
+  padding: 16px 20px;
+  margin-top: 18px;
+
+  border-radius: 12px;
+
+  background: rgba(66,230,164,.07);
+  border: 1px solid rgba(66,230,164,.18);
+
+  color: #b9f7dc;
+}
+
+.answer.wrong {
+  background: rgba(255,95,126,.07);
+  border-color: rgba(255,95,126,.2);
+  color: #ffc0cd;
+}
+
+
+/* =========================================================
+   PIPELINE / STEPS
+========================================================= */
+
+.pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  margin: 35px 0;
+}
+
+.pipeline-step {
+  padding: 12px 17px;
+
+  border-radius: 12px;
+
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+
+  color: var(--text);
+
+  transition: .3s ease;
+}
+
+.pipeline-step.active {
+  border-color: var(--cyan);
+  box-shadow:
+    0 0 25px rgba(57,225,255,.18);
+
+  transform: translateY(-3px);
+}
+
+.pipeline-arrow {
+  color: var(--muted);
+}
+
+
+/* =========================================================
+   BIG NUMBER / 1 TRILLION DEMO
+========================================================= */
+
+.big-number {
+  margin: 20px 0;
+
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -.06em;
+
+  color: var(--orange);
+
+  text-shadow:
+    0 0 35px rgba(255,180,84,.25);
+}
+
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   HASH VISUALIZATION
+========================================================= */
+
+.hash-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 15px;
+  align-items: center;
+
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.hash-row:last-child {
+  border-bottom: 0;
+}
+
+.hash-bit {
+  display: inline-grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  margin-right: 5px;
+
+  border-radius: 7px;
+
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.hash-bit.one {
+  color: #bdfcff;
+  background: rgba(57,225,255,.15);
+  border: 1px solid rgba(57,225,255,.35);
+}
+
+.hash-bit.zero {
+  color: #ffc1cb;
+  background: rgba(255,95,126,.12);
+  border: 1px solid rgba(255,95,126,.25);
+}
+
+.hash {
+  font-family: monospace;
+  color: var(--cyan);
+}
+
+
+/* =========================================================
+   FINGERPRINT GRID
+========================================================= */
+
+.fingerprint {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+
+  width: min(520px, 100%);
+  aspect-ratio: 1;
+
+  margin: 30px auto;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(85,168,255,.08),
+      transparent 65%
+    );
+}
+
+.fingerprint-cell {
+  position: relative;
+
+  border: 1px solid rgba(255,255,255,.07);
+
+  transition:
+    background .3s ease,
+    box-shadow .3s ease;
+}
+
+.fingerprint-cell:hover {
+  background: rgba(85,168,255,.08);
+}
+
+.fingerprint-cell.has-minutia {
+  background: rgba(57,225,255,.13);
+  box-shadow:
+    inset 0 0 20px rgba(57,225,255,.08);
+}
+
+.minutia {
+  position: absolute;
+
+  width: 9px;
+  height: 9px;
+
+  top: 50%;
+  left: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 14px var(--cyan);
+
+  animation: pulse 1.8s infinite;
+}
+
+
+/* =========================================================
+   REVEAL ANIMATION
+========================================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(25px);
+
+  transition:
+    opacity .7s ease,
+    transform .7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   GLOW ANIMATION
+========================================================= */
+
+.glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 rgba(57,225,255,0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 35px rgba(57,225,255,.16);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.35);
+  }
+}
+
+
+/* =========================================================
+   CODE / FORMULAS
+========================================================= */
+
+code,
+.formula {
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+
+.formula {
+  padding: 18px;
+
+  overflow-x: auto;
+
+  color: #cfd8ff;
+
+  background: #080d17;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 760px) {
+
+  section {
+    padding: 75px 0;
+  }
+
+  .top-nav {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .two-col,
+  .three-col,
+  .records {
+    grid-template-columns: 1fr;
+  }
+
+  .hash-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline {
+    flex-direction: column;
+  }
+
+  .pipeline-arrow {
+    transform: rotate(90deg);
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+}
